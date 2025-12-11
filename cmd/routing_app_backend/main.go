@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/Marwan051/final_project_backend/internal/server"
+	"github.com/Marwan051/final_project_backend/internal/service/route_service/pygrpc"
 	"github.com/Marwan051/final_project_backend/internal/utils"
 )
 
@@ -19,9 +20,25 @@ func main() {
 		log.Fatalf("failed to load config: %v", err)
 	}
 	cfg := utils.Cfg
+	log.Printf("Routing service at %s", cfg.RoutingServiceAddr)
+	routingService, err := pygrpc.NewClient(cfg.RoutingServiceAddr)
+	if err != nil {
+		log.Fatalf("Failed to connect to routing service: %v", err)
+	}
 
-	// Create handler from routes
-	handler := server.NewHandler()
+	working, err := routingService.HealthCheck(context.Background())
+	if err != nil {
+		log.Fatalf("Service not working : %t, err : %s", working, err.Error())
+	}
+
+	if working {
+		log.Printf("Connection to grpc server established successfully at %s", cfg.RoutingServiceAddr)
+	}
+
+	defer routingService.Close()
+
+	// Create HTTP handler with injected dependencies
+	handler := server.NewHandler(routingService)
 
 	// Create server
 	srv := &http.Server{

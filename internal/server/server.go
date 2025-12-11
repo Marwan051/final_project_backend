@@ -4,19 +4,24 @@ import (
 	"net/http"
 
 	v1 "github.com/Marwan051/final_project_backend/internal/api/v1"
+	"github.com/Marwan051/final_project_backend/internal/service/route_service"
 )
 
 // NewHandler creates the application's HTTP handler with middleware
-func NewHandler() http.Handler {
+func NewHandler(routingService route_service.Router) http.Handler {
+	// Create v1 router with dependencies
+	v1Router := v1.NewRouter(routingService)
+
+	// Main router
 	mux := http.NewServeMux()
+	mux.Handle("/api/v1/", http.StripPrefix("/api/v1", v1Router))
 
-	// Mount API v1 routes under /api/v1/
-	mux.Handle("/api/v1/", http.StripPrefix("/api/v1", v1.NewRouter()))
-
-	// Apply middleware chain (order: first runs first)
-	return ChainMiddleware(mux,
+	// Apply middleware
+	handler := ChainMiddleware(mux,
 		Headers,
 		PanicRecover,
 		Logging,
 	)
+
+	return handler
 }

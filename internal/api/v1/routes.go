@@ -4,18 +4,23 @@ import (
 	"encoding/json"
 	"net/http"
 	"time"
+
+	"github.com/Marwan051/final_project_backend/internal/api/v1/handlers"
+	"github.com/Marwan051/final_project_backend/internal/service/route_service"
 )
 
 // NewRouter returns a new router with all v1 API routes
-func NewRouter() *http.ServeMux {
+func NewRouter(routingService route_service.Router) *http.ServeMux {
 	mux := http.NewServeMux()
+
+	// Create handler with the injected service
+	routingHandler := handlers.NewRoutingHandler(routingService)
 
 	// Health check
 	mux.HandleFunc("GET /health", HealthHandler)
 
-	// Add more routes here
-	// mux.HandleFunc("GET /routes", handlers.GetRoutes)
-	// mux.HandleFunc("POST /routes", handlers.CreateRoute)
+	// Routing endpoints
+	mux.HandleFunc("POST /routes/find", routingHandler.FindRoute)
 
 	return mux
 }

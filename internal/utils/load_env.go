@@ -6,9 +6,10 @@ import (
 )
 
 type Config struct {
-	DBUrl     string `env:"DB_URL,required"`
-	Port      string `env:"PORT,required"`
-	ENV       string `env:"ENV,required"`
+	DBUrl              string `env:"DB_URL,required"`
+	Port               string `env:"PORT,required"`
+	ENV                string `env:"ENV,required"`
+	RoutingServiceAddr string `env:"ROUTING_SERVICE_ADDR,required"`
 }
 
 // Cfg will hold your application’s config after Load()
