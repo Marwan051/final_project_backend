@@ -20,7 +20,6 @@ func main() {
 		log.Fatalf("failed to load config: %v", err)
 	}
 	cfg := utils.Cfg
-	log.Printf("Routing service at %s", cfg.RoutingServiceAddr)
 	routingService, err := pygrpc.NewClient(cfg.RoutingServiceAddr)
 	if err != nil {
 		log.Fatalf("Failed to connect to routing service: %v", err)
@@ -48,7 +47,7 @@ func main() {
 
 	// Start server in a goroutine
 	go func() {
-		log.Printf("Server starting on :%s", cfg.Port)
+		log.Printf("Server starting on:%s", cfg.Port)
 		log.Printf("Server starting in %s mode", cfg.ENV)
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("server failed to start: %v", err)
