@@ -9,7 +9,6 @@ import (
 	pb "github.com/Marwan051/final_project_backend/internal/service/route_service/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-	"google.golang.org/grpc/keepalive"
 )
 
 type ClientConfig struct {
@@ -25,27 +24,19 @@ type Client struct {
 }
 
 func NewClient(cfg ClientConfig) (route_service.Router, error) {
-	// 1. Define robust Keepalive parameters
-	kacp := keepalive.ClientParameters{
-		Time:                10 * time.Second, // Send pings every 10 seconds if there is no activity
-		Timeout:             time.Second,      // Wait 1 second for ping ack before considering the connection dead
-		PermitWithoutStream: false,            // Send pings even without active streams
-	}
-
-	// 2. Base options (Interceptors, TLS, etc. can be appended via cfg.DialOptions)
+	// Base options - simple for demo
 	opts := []grpc.DialOption{
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
-		grpc.WithKeepaliveParams(kacp),
 	}
 	opts = append(opts, cfg.DialOptions...)
 
-	// 3. Create Connection
+	// Create Connection
 	conn, err := grpc.NewClient(cfg.Address, opts...)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create grpc client for %s: %w", cfg.Address, err)
 	}
 
-	// 4. Set default timeout if not provided
+	// Set default timeout if not provided
 	timeout := cfg.RequestTimeout
 	if timeout == 0 {
 		timeout = 10 * time.Second
