@@ -9,32 +9,52 @@ import (
 	pb "github.com/Marwan051/final_project_backend/internal/service/route_service/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/keepalive"
 )
 
-// Client is the gRPC implementation of route_service.Router
-type Client struct {
-	client pb.RoutingServiceClient
-	conn   *grpc.ClientConn
+type ClientConfig struct {
+	Address        string
+	RequestTimeout time.Duration
+	DialOptions    []grpc.DialOption
 }
 
-// NewClient creates a new gRPC routing client
-func NewClient(addr string) (route_service.Router, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
+type Client struct {
+	client         pb.RoutingServiceClient
+	conn           *grpc.ClientConn
+	requestTimeout time.Duration
+}
 
-	conn, err := grpc.DialContext(
-		ctx,
-		addr,
+func NewClient(cfg ClientConfig) (route_service.Router, error) {
+	// 1. Define robust Keepalive parameters
+	kacp := keepalive.ClientParameters{
+		Time:                10 * time.Second, // Send pings every 10 seconds if there is no activity
+		Timeout:             time.Second,      // Wait 1 second for ping ack before considering the connection dead
+		PermitWithoutStream: false,            // Send pings even without active streams
+	}
+
+	// 2. Base options (Interceptors, TLS, etc. can be appended via cfg.DialOptions)
+	opts := []grpc.DialOption{
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
-		grpc.WithBlock(), // Wait for connection to be established
-	)
+		grpc.WithKeepaliveParams(kacp),
+	}
+	opts = append(opts, cfg.DialOptions...)
+
+	// 3. Create Connection
+	conn, err := grpc.NewClient(cfg.Address, opts...)
 	if err != nil {
-		return nil, fmt.Errorf("failed to connect to routing service at %s: %w", addr, err)
+		return nil, fmt.Errorf("failed to create grpc client for %s: %w", cfg.Address, err)
+	}
+
+	// 4. Set default timeout if not provided
+	timeout := cfg.RequestTimeout
+	if timeout == 0 {
+		timeout = 10 * time.Second
 	}
 
 	return &Client{
-		client: pb.NewRoutingServiceClient(conn),
-		conn:   conn,
+		client:         pb.NewRoutingServiceClient(conn),
+		conn:           conn,
+		requestTimeout: timeout,
 	}, nil
 }
 
@@ -43,7 +63,13 @@ func (c *Client) Close() error {
 }
 
 func (c *Client) FindRoute(ctx context.Context, req route_service.RouteRequest) (route_service.RouteResponse, error) {
-	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	// Optimization: Check if context is already done before starting
+	if err := ctx.Err(); err != nil {
+		return route_service.RouteResponse{}, err
+	}
+
+	// Use configured timeout only if the parent context doesn't have a tighter deadline
+	ctx, cancel := context.WithTimeout(ctx, c.requestTimeout)
 	defer cancel()
 
 	// Apply defaults
@@ -64,8 +90,25 @@ func (c *Client) FindRoute(ctx context.Context, req route_service.RouteRequest) 
 		return route_service.RouteResponse{}, fmt.Errorf("grpc findroute failed: %w", err)
 	}
 
-	// Map protobuf -> domain model
+	return mapProtoToDomain(resp), nil
+}
+
+func (c *Client) HealthCheck(ctx context.Context) (bool, error) {
+	ctx, cancel := context.WithTimeout(ctx, 15*time.Second)
+	defer cancel()
+
+	_, err := c.client.HealthCheck(ctx, &pb.HealthRequest{})
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
+// mapProtoToDomain separates the mapping logic to keep the main method clean.
+// This allows the compiler to inline this function potentially.
+func mapProtoToDomain(resp *pb.RouteResponse) route_service.RouteResponse {
 	journeys := make([]route_service.Journey, len(resp.GetJourneys()))
+
 	for i, j := range resp.GetJourneys() {
 		var costs route_service.JourneyCosts
 		if c := j.GetCosts(); c != nil {
@@ -87,13 +130,5 @@ func (c *Client) FindRoute(ctx context.Context, req route_service.RouteRequest) 
 		Journeys:        journeys,
 		StartTripsFound: int(resp.GetStartTripsFound()),
 		EndTripsFound:   int(resp.GetEndTripsFound()),
-	}, nil
-}
-
-func (c *Client) HealthCheck(ctx context.Context) (bool, error) {
-	ctx, cancel := context.WithTimeout(ctx, 2*time.Second)
-	defer cancel()
-
-	_, err := c.client.HealthCheck(ctx, &pb.HealthRequest{})
-	return err == nil, err
+	}
 }

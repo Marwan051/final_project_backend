@@ -19,8 +19,11 @@ func NewRouter(routingService route_service.Router) *http.ServeMux {
 	// Health check
 	mux.HandleFunc("GET /health", HealthHandler)
 
-	// Routing endpoints
-	mux.HandleFunc("POST /routes/find", routingHandler.FindRoute)
+	// Routing endpoint
+	mux.HandleFunc("POST /route", routingHandler.FindRoute)
+
+	// gRPC server health check
+	mux.HandleFunc("GET /grpcealth", routingHandler.GrpcHealthHandler)
 
 	return mux
 }

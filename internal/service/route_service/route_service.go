@@ -4,8 +4,6 @@ import (
 	"context"
 )
 
-// --- Domain Models (Pure Go, no implementation details) ---
-
 const (
 	DefaultMaxTransfers  int32   = 3
 	DefaultWalkingCutoff float64 = 500
@@ -47,8 +45,6 @@ type RouteResponse struct {
 	StartTripsFound int       `json:"start_trips_found"`
 	EndTripsFound   int       `json:"end_trips_found"`
 }
-
-// --- Interface (Contract) ---
 
 // Router defines the routing service interface.
 // Any routing provider (gRPC, REST, local algorithm) must implement this.

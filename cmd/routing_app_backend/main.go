@@ -20,21 +20,26 @@ func main() {
 		log.Fatalf("failed to load config: %v", err)
 	}
 	cfg := utils.Cfg
-	routingService, err := pygrpc.NewClient(cfg.RoutingServiceAddr)
+	routingService, err := pygrpc.NewClient(pygrpc.ClientConfig{
+		Address: cfg.RoutingServiceAddr,
+	})
 	if err != nil {
 		log.Fatalf("Failed to connect to routing service: %v", err)
 	}
-
-	working, err := routingService.HealthCheck(context.Background())
-	if err != nil {
-		log.Fatalf("Service not working : %t, err : %s", working, err.Error())
-	}
-
-	if working {
-		log.Printf("Connection to grpc server established successfully at %s", cfg.RoutingServiceAddr)
-	}
-
 	defer routingService.Close()
+
+	log.Printf("Waiting for gRPC service to be ready...")
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	working, err := routingService.HealthCheck(ctx)
+	if err != nil {
+		log.Fatalf("gRPC health check failed: %v", err)
+	}
+	if !working {
+		log.Fatalf("gRPC service reported unhealthy")
+	}
+	log.Printf("gRPC connection verified at %s", cfg.RoutingServiceAddr)
 
 	// Create HTTP handler with injected dependencies
 	handler := server.NewHandler(routingService)
@@ -47,7 +52,7 @@ func main() {
 
 	// Start server in a goroutine
 	go func() {
-		log.Printf("Server starting on:%s", cfg.Port)
+		log.Printf("Server starting on :%s", cfg.Port)
 		log.Printf("Server starting in %s mode", cfg.ENV)
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("server failed to start: %v", err)
