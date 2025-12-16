@@ -46,8 +46,6 @@ type RouteResponse struct {
 	EndTripsFound   int       `json:"end_trips_found"`
 }
 
-// Router defines the routing service interface.
-// Any routing provider (gRPC, REST, local algorithm) must implement this.
 type Router interface {
 	FindRoute(ctx context.Context, req RouteRequest) (RouteResponse, error)
 	HealthCheck(ctx context.Context) (bool, error)

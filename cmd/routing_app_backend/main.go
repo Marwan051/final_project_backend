@@ -20,6 +20,8 @@ func main() {
 		log.Fatalf("failed to load config: %v", err)
 	}
 	cfg := utils.Cfg
+
+	// load routing service with the routing server confgi
 	routingService, err := pygrpc.NewClient(pygrpc.ClientConfig{
 		Address: cfg.RoutingServiceAddr,
 	})

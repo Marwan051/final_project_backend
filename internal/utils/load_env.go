@@ -17,7 +17,6 @@ var Cfg Config
 
 // Load reads .env (if present) and then parses into Cfg.
 func LoadENV() error {
-	// ignore error if .env is missing (in prod you’ll use real ENV vars)
 	_ = godotenv.Load()
 	return env.Parse(&Cfg)
 }

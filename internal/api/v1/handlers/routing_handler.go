@@ -8,10 +8,7 @@ import (
 	"github.com/Marwan051/final_project_backend/internal/service/route_service"
 )
 
-// internal/api/v1/handlers/routing_handler.go
-
 type RoutingHandler struct {
-	// DEPENDENCY INJECTION: We ask for the Interface
 	routerService route_service.Router
 }
 
@@ -25,7 +22,6 @@ func NewRoutingHandler(router route_service.Router) *RoutingHandler {
 func (h *RoutingHandler) FindRoute(w http.ResponseWriter, r *http.Request) {
 	var req route_service.RouteRequest
 
-	// Decode JSON request body
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Invalid request body: "+err.Error(), http.StatusBadRequest)
 		return
@@ -46,20 +42,6 @@ func (h *RoutingHandler) FindRoute(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Return JSON response
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(w).Encode(resp); err != nil {
-		log.Printf("Error encoding response: %v", err)
-	}
-}
-
-func (h *RoutingHandler) GrpcHealthHandler(w http.ResponseWriter, r *http.Request) {
-	resp, err := h.routerService.HealthCheck(r.Context())
-	if err != nil {
-		log.Printf("could not complete grpc health check")
-		http.Error(w, "Failed to complete grpc health check: "+err.Error(), http.StatusInternalServerError)
-		return
-	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(w).Encode(resp); err != nil {

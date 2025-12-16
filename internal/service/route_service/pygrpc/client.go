@@ -24,7 +24,7 @@ type Client struct {
 }
 
 func NewClient(cfg ClientConfig) (route_service.Router, error) {
-	// Base options - simple for demo
+	// Base options
 	opts := []grpc.DialOption{
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	}
@@ -54,19 +54,16 @@ func (c *Client) Close() error {
 }
 
 func (c *Client) FindRoute(ctx context.Context, req route_service.RouteRequest) (route_service.RouteResponse, error) {
-	// Optimization: Check if context is already done before starting
+
 	if err := ctx.Err(); err != nil {
 		return route_service.RouteResponse{}, err
 	}
 
-	// Use configured timeout only if the parent context doesn't have a tighter deadline
 	ctx, cancel := context.WithTimeout(ctx, c.requestTimeout)
 	defer cancel()
 
-	// Apply defaults
 	req.ApplyDefaults()
 
-	// Map domain model -> protobuf
 	pbReq := &pb.RouteRequest{
 		StartLat:      req.StartLat,
 		StartLon:      req.StartLon,
@@ -95,8 +92,6 @@ func (c *Client) HealthCheck(ctx context.Context) (bool, error) {
 	return true, nil
 }
 
-// mapProtoToDomain separates the mapping logic to keep the main method clean.
-// This allows the compiler to inline this function potentially.
 func mapProtoToDomain(resp *pb.RouteResponse) route_service.RouteResponse {
 	journeys := make([]route_service.Journey, len(resp.GetJourneys()))
 
