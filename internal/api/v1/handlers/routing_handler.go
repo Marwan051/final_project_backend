@@ -1,11 +1,11 @@
 package handlers
 
 import (
-	"encoding/json"
 	"log"
 	"net/http"
 
 	"github.com/Marwan051/final_project_backend/internal/service/route_service"
+	"github.com/Marwan051/final_project_backend/internal/utils"
 )
 
 type RoutingHandler struct {
@@ -22,14 +22,14 @@ func NewRoutingHandler(router route_service.Router) *RoutingHandler {
 func (h *RoutingHandler) FindRoute(w http.ResponseWriter, r *http.Request) {
 	var req route_service.RouteRequest
 
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, "Invalid request body: "+err.Error(), http.StatusBadRequest)
+	if err := utils.DecodeJSONBody(r, &req); err != nil {
+		utils.WriteJSONError(w, http.StatusBadRequest, "Invalid request: "+err.Error())
 		return
 	}
 
 	// Validate required fields
 	if req.StartLat == 0 || req.StartLon == 0 || req.EndLat == 0 || req.EndLon == 0 {
-		http.Error(w, "Missing required coordinates", http.StatusBadRequest)
+		utils.WriteJSONError(w, http.StatusBadRequest, "Missing required coordinates")
 		return
 	}
 
@@ -37,14 +37,12 @@ func (h *RoutingHandler) FindRoute(w http.ResponseWriter, r *http.Request) {
 	resp, err := h.routerService.FindRoute(r.Context(), req)
 	if err != nil {
 		log.Printf("Error finding route: %v", err)
-		http.Error(w, "Failed to find route: "+err.Error(), http.StatusInternalServerError)
+		utils.WriteJSONError(w, http.StatusInternalServerError, "Failed to find route")
 		return
 	}
 
 	// Return JSON response
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(w).Encode(resp); err != nil {
+	if err := utils.WriteJSONResponse(w, http.StatusOK, resp); err != nil {
 		log.Printf("Error encoding response: %v", err)
 	}
 }
