@@ -1,0 +1,46 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Environment files (don't copy actual secrets)
+.env
+.env.local
+.env.*.local
+
+# Development files
+*.md
+LICENSE
+.air.toml
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Build artifacts
+tmp/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+main
+
+# Test files
+*_test.go
+test/
+coverage.out
+*.test
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose*.yml
+
+# Misc
+*.log
+.DS_Store
+README.md
