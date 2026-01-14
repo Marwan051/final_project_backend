@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package proto;
+package routing;
 
 option go_package = "github.com/Marwan051/final_project_backend/internal/service/route_service/proto";
 

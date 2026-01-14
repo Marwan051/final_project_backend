@@ -1008,11 +1008,11 @@ var File_routing_proto protoreflect.FileDescriptor
 
 const file_routing_proto_rawDesc = "" +
 	"\n" +
-	"\rrouting.proto\x12\x05proto\"\x0f\n" +
+	"\rrouting.proto\x12\arouting\"\x0f\n" +
 	"\rHealthRequest\"B\n" +
 	"\x0eHealthResponse\x12\x16\n" +
 	"\x06status\x18\x01 \x01(\tR\x06status\x12\x18\n" +
-	"\amessage\x18\x02 \x01(\tR\amessage\"\xb7\x02\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\"\xb9\x02\n" +
 	"\fRouteRequest\x12\x1b\n" +
 	"\tstart_lon\x18\x01 \x01(\x01R\bstartLon\x12\x1b\n" +
 	"\tstart_lat\x18\x02 \x01(\x01R\bstartLat\x12\x17\n" +
@@ -1020,54 +1020,53 @@ const file_routing_proto_rawDesc = "" +
 	"\aend_lat\x18\x04 \x01(\x01R\x06endLat\x12#\n" +
 	"\rmax_transfers\x18\x05 \x01(\x05R\fmaxTransfers\x12%\n" +
 	"\x0ewalking_cutoff\x18\x06 \x01(\x01R\rwalkingCutoff\x12)\n" +
-	"\x10restricted_modes\x18\a \x03(\tR\x0frestrictedModes\x12/\n" +
-	"\aweights\x18\b \x01(\v2\x15.proto.RoutingWeightsR\aweights\x12\x13\n" +
+	"\x10restricted_modes\x18\a \x03(\tR\x0frestrictedModes\x121\n" +
+	"\aweights\x18\b \x01(\v2\x17.routing.RoutingWeightsR\aweights\x12\x13\n" +
 	"\x05top_k\x18\t \x01(\x05R\x04topK\"h\n" +
 	"\x0eRoutingWeights\x12\x12\n" +
 	"\x04time\x18\x01 \x01(\x01R\x04time\x12\x12\n" +
 	"\x04cost\x18\x02 \x01(\x01R\x04cost\x12\x12\n" +
 	"\x04walk\x18\x03 \x01(\x01R\x04walk\x12\x1a\n" +
-	"\btransfer\x18\x04 \x01(\x01R\btransfer\"\xf6\x01\n" +
+	"\btransfer\x18\x04 \x01(\x01R\btransfer\"\xf8\x01\n" +
 	"\rRouteResponse\x12!\n" +
-	"\fnum_journeys\x18\x01 \x01(\x05R\vnumJourneys\x12*\n" +
-	"\bjourneys\x18\x02 \x03(\v2\x0e.proto.JourneyR\bjourneys\x12*\n" +
+	"\fnum_journeys\x18\x01 \x01(\x05R\vnumJourneys\x12,\n" +
+	"\bjourneys\x18\x02 \x03(\v2\x10.routing.JourneyR\bjourneys\x12*\n" +
 	"\x11start_trips_found\x18\x03 \x01(\x05R\x0fstartTripsFound\x12&\n" +
 	"\x0fend_trips_found\x18\x04 \x01(\x05R\rendTripsFound\x12,\n" +
 	"\x12total_routes_found\x18\x05 \x01(\x05R\x10totalRoutesFound\x12\x14\n" +
-	"\x05error\x18\x06 \x01(\tR\x05error\"\x8d\x01\n" +
+	"\x05error\x18\x06 \x01(\tR\x05error\"\x91\x01\n" +
 	"\aJourney\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12!\n" +
-	"\ftext_summary\x18\x02 \x01(\tR\vtextSummary\x12/\n" +
-	"\asummary\x18\x03 \x01(\v2\x15.proto.JourneySummaryR\asummary\x12\x1e\n" +
-	"\x04legs\x18\x04 \x03(\v2\n" +
-	".proto.LegR\x04legs\"\xf2\x01\n" +
+	"\ftext_summary\x18\x02 \x01(\tR\vtextSummary\x121\n" +
+	"\asummary\x18\x03 \x01(\v2\x17.routing.JourneySummaryR\asummary\x12 \n" +
+	"\x04legs\x18\x04 \x03(\v2\f.routing.LegR\x04legs\"\xf2\x01\n" +
 	"\x0eJourneySummary\x12,\n" +
 	"\x12total_time_minutes\x18\x01 \x01(\x05R\x10totalTimeMinutes\x122\n" +
 	"\x15total_distance_meters\x18\x02 \x01(\x05R\x13totalDistanceMeters\x126\n" +
 	"\x17walking_distance_meters\x18\x03 \x01(\x05R\x15walkingDistanceMeters\x12\x1c\n" +
 	"\ttransfers\x18\x04 \x01(\x05R\ttransfers\x12\x12\n" +
 	"\x04cost\x18\x05 \x01(\x01R\x04cost\x12\x14\n" +
-	"\x05modes\x18\x06 \x03(\tR\x05modes\"\x8f\x01\n" +
-	"\x03Leg\x12$\n" +
-	"\x04walk\x18\x01 \x01(\v2\x0e.proto.WalkLegH\x00R\x04walk\x12$\n" +
-	"\x04trip\x18\x02 \x01(\v2\x0e.proto.TripLegH\x00R\x04trip\x120\n" +
-	"\btransfer\x18\x03 \x01(\v2\x12.proto.TransferLegH\x00R\btransferB\n" +
+	"\x05modes\x18\x06 \x03(\tR\x05modes\"\x95\x01\n" +
+	"\x03Leg\x12&\n" +
+	"\x04walk\x18\x01 \x01(\v2\x10.routing.WalkLegH\x00R\x04walk\x12&\n" +
+	"\x04trip\x18\x02 \x01(\v2\x10.routing.TripLegH\x00R\x04trip\x122\n" +
+	"\btransfer\x18\x03 \x01(\v2\x14.routing.TransferLegH\x00R\btransferB\n" +
 	"\n" +
-	"\bleg_type\"\x84\x01\n" +
+	"\bleg_type\"\x86\x01\n" +
 	"\aWalkLeg\x12'\n" +
 	"\x0fdistance_meters\x18\x01 \x01(\x05R\x0edistanceMeters\x12)\n" +
-	"\x10duration_minutes\x18\x02 \x01(\x05R\x0fdurationMinutes\x12%\n" +
-	"\x04path\x18\x03 \x03(\v2\x11.proto.CoordinateR\x04path\"\xa0\x02\n" +
+	"\x10duration_minutes\x18\x02 \x01(\x05R\x0fdurationMinutes\x12'\n" +
+	"\x04path\x18\x03 \x03(\v2\x13.routing.CoordinateR\x04path\"\xa6\x02\n" +
 	"\aTripLeg\x12\x17\n" +
 	"\atrip_id\x18\x01 \x01(\tR\x06tripId\x12\x12\n" +
 	"\x04mode\x18\x02 \x01(\tR\x04mode\x12(\n" +
 	"\x10route_short_name\x18\x03 \x01(\tR\x0erouteShortName\x12\x1a\n" +
 	"\bheadsign\x18\x04 \x01(\tR\bheadsign\x12\x12\n" +
 	"\x04fare\x18\x05 \x01(\x01R\x04fare\x12)\n" +
-	"\x10duration_minutes\x18\x06 \x01(\x05R\x0fdurationMinutes\x12\x1f\n" +
-	"\x04from\x18\a \x01(\v2\v.proto.StopR\x04from\x12\x1b\n" +
-	"\x02to\x18\b \x01(\v2\v.proto.StopR\x02to\x12%\n" +
-	"\x04path\x18\t \x03(\v2\x11.proto.CoordinateR\x04path\"\x9f\x02\n" +
+	"\x10duration_minutes\x18\x06 \x01(\x05R\x0fdurationMinutes\x12!\n" +
+	"\x04from\x18\a \x01(\v2\r.routing.StopR\x04from\x12\x1d\n" +
+	"\x02to\x18\b \x01(\v2\r.routing.StopR\x02to\x12'\n" +
+	"\x04path\x18\t \x03(\v2\x13.routing.CoordinateR\x04path\"\xa1\x02\n" +
 	"\vTransferLeg\x12 \n" +
 	"\ffrom_trip_id\x18\x01 \x01(\tR\n" +
 	"fromTripId\x12\x1c\n" +
@@ -1077,19 +1076,19 @@ const file_routing_proto_rawDesc = "" +
 	"\fto_trip_name\x18\x04 \x01(\tR\n" +
 	"toTripName\x126\n" +
 	"\x17walking_distance_meters\x18\x05 \x01(\x05R\x15walkingDistanceMeters\x12)\n" +
-	"\x10duration_minutes\x18\x06 \x01(\x05R\x0fdurationMinutes\x12%\n" +
-	"\x04path\x18\a \x03(\v2\x11.proto.CoordinateR\x04path\"\\\n" +
+	"\x10duration_minutes\x18\x06 \x01(\x05R\x0fdurationMinutes\x12'\n" +
+	"\x04path\x18\a \x03(\v2\x13.routing.CoordinateR\x04path\"^\n" +
 	"\x04Stop\x12\x17\n" +
 	"\astop_id\x18\x01 \x01(\x05R\x06stopId\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12'\n" +
-	"\x05coord\x18\x03 \x01(\v2\x11.proto.CoordinateR\x05coord\"0\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12)\n" +
+	"\x05coord\x18\x03 \x01(\v2\x13.routing.CoordinateR\x05coord\"0\n" +
 	"\n" +
 	"Coordinate\x12\x10\n" +
 	"\x03lon\x18\x01 \x01(\x01R\x03lon\x12\x10\n" +
-	"\x03lat\x18\x02 \x01(\x01R\x03lat2\x88\x01\n" +
-	"\x0eRoutingService\x12<\n" +
-	"\vHealthCheck\x12\x14.proto.HealthRequest\x1a\x15.proto.HealthResponse\"\x00\x128\n" +
-	"\tFindRoute\x12\x13.proto.RouteRequest\x1a\x14.proto.RouteResponse\"\x00BQZOgithub.com/Marwan051/final_project_backend/internal/service/route_service/protob\x06proto3"
+	"\x03lat\x18\x02 \x01(\x01R\x03lat2\x90\x01\n" +
+	"\x0eRoutingService\x12@\n" +
+	"\vHealthCheck\x12\x16.routing.HealthRequest\x1a\x17.routing.HealthResponse\"\x00\x12<\n" +
+	"\tFindRoute\x12\x15.routing.RouteRequest\x1a\x16.routing.RouteResponse\"\x00BQZOgithub.com/Marwan051/final_project_backend/internal/service/route_service/protob\x06proto3"
 
 var (
 	file_routing_proto_rawDescOnce sync.Once
@@ -1105,38 +1104,38 @@ func file_routing_proto_rawDescGZIP() []byte {
 
 var file_routing_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
 var file_routing_proto_goTypes = []any{
-	(*HealthRequest)(nil),  // 0: proto.HealthRequest
-	(*HealthResponse)(nil), // 1: proto.HealthResponse
-	(*RouteRequest)(nil),   // 2: proto.RouteRequest
-	(*RoutingWeights)(nil), // 3: proto.RoutingWeights
-	(*RouteResponse)(nil),  // 4: proto.RouteResponse
-	(*Journey)(nil),        // 5: proto.Journey
-	(*JourneySummary)(nil), // 6: proto.JourneySummary
-	(*Leg)(nil),            // 7: proto.Leg
-	(*WalkLeg)(nil),        // 8: proto.WalkLeg
-	(*TripLeg)(nil),        // 9: proto.TripLeg
-	(*TransferLeg)(nil),    // 10: proto.TransferLeg
-	(*Stop)(nil),           // 11: proto.Stop
-	(*Coordinate)(nil),     // 12: proto.Coordinate
+	(*HealthRequest)(nil),  // 0: routing.HealthRequest
+	(*HealthResponse)(nil), // 1: routing.HealthResponse
+	(*RouteRequest)(nil),   // 2: routing.RouteRequest
+	(*RoutingWeights)(nil), // 3: routing.RoutingWeights
+	(*RouteResponse)(nil),  // 4: routing.RouteResponse
+	(*Journey)(nil),        // 5: routing.Journey
+	(*JourneySummary)(nil), // 6: routing.JourneySummary
+	(*Leg)(nil),            // 7: routing.Leg
+	(*WalkLeg)(nil),        // 8: routing.WalkLeg
+	(*TripLeg)(nil),        // 9: routing.TripLeg
+	(*TransferLeg)(nil),    // 10: routing.TransferLeg
+	(*Stop)(nil),           // 11: routing.Stop
+	(*Coordinate)(nil),     // 12: routing.Coordinate
 }
 var file_routing_proto_depIdxs = []int32{
-	3,  // 0: proto.RouteRequest.weights:type_name -> proto.RoutingWeights
-	5,  // 1: proto.RouteResponse.journeys:type_name -> proto.Journey
-	6,  // 2: proto.Journey.summary:type_name -> proto.JourneySummary
-	7,  // 3: proto.Journey.legs:type_name -> proto.Leg
-	8,  // 4: proto.Leg.walk:type_name -> proto.WalkLeg
-	9,  // 5: proto.Leg.trip:type_name -> proto.TripLeg
-	10, // 6: proto.Leg.transfer:type_name -> proto.TransferLeg
-	12, // 7: proto.WalkLeg.path:type_name -> proto.Coordinate
-	11, // 8: proto.TripLeg.from:type_name -> proto.Stop
-	11, // 9: proto.TripLeg.to:type_name -> proto.Stop
-	12, // 10: proto.TripLeg.path:type_name -> proto.Coordinate
-	12, // 11: proto.TransferLeg.path:type_name -> proto.Coordinate
-	12, // 12: proto.Stop.coord:type_name -> proto.Coordinate
-	0,  // 13: proto.RoutingService.HealthCheck:input_type -> proto.HealthRequest
-	2,  // 14: proto.RoutingService.FindRoute:input_type -> proto.RouteRequest
-	1,  // 15: proto.RoutingService.HealthCheck:output_type -> proto.HealthResponse
-	4,  // 16: proto.RoutingService.FindRoute:output_type -> proto.RouteResponse
+	3,  // 0: routing.RouteRequest.weights:type_name -> routing.RoutingWeights
+	5,  // 1: routing.RouteResponse.journeys:type_name -> routing.Journey
+	6,  // 2: routing.Journey.summary:type_name -> routing.JourneySummary
+	7,  // 3: routing.Journey.legs:type_name -> routing.Leg
+	8,  // 4: routing.Leg.walk:type_name -> routing.WalkLeg
+	9,  // 5: routing.Leg.trip:type_name -> routing.TripLeg
+	10, // 6: routing.Leg.transfer:type_name -> routing.TransferLeg
+	12, // 7: routing.WalkLeg.path:type_name -> routing.Coordinate
+	11, // 8: routing.TripLeg.from:type_name -> routing.Stop
+	11, // 9: routing.TripLeg.to:type_name -> routing.Stop
+	12, // 10: routing.TripLeg.path:type_name -> routing.Coordinate
+	12, // 11: routing.TransferLeg.path:type_name -> routing.Coordinate
+	12, // 12: routing.Stop.coord:type_name -> routing.Coordinate
+	0,  // 13: routing.RoutingService.HealthCheck:input_type -> routing.HealthRequest
+	2,  // 14: routing.RoutingService.FindRoute:input_type -> routing.RouteRequest
+	1,  // 15: routing.RoutingService.HealthCheck:output_type -> routing.HealthResponse
+	4,  // 16: routing.RoutingService.FindRoute:output_type -> routing.RouteResponse
 	15, // [15:17] is the sub-list for method output_type
 	13, // [13:15] is the sub-list for method input_type
 	13, // [13:13] is the sub-list for extension type_name
