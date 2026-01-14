@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-grpc v1.6.0
 // - protoc             v4.25.3
-// source: internal/service/route_service/proto/route.proto
+// source: routing.proto
 
-package routing
+package proto
 
 import (
 	context "context"
@@ -19,8 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	RoutingService_HealthCheck_FullMethodName = "/routing.RoutingService/HealthCheck"
-	RoutingService_FindRoute_FullMethodName   = "/routing.RoutingService/FindRoute"
+	RoutingService_HealthCheck_FullMethodName = "/proto.RoutingService/HealthCheck"
+	RoutingService_FindRoute_FullMethodName   = "/proto.RoutingService/FindRoute"
 )
 
 // RoutingServiceClient is the client API for RoutingService service.
@@ -150,7 +150,7 @@ func _RoutingService_FindRoute_Handler(srv interface{}, ctx context.Context, dec
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var RoutingService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "routing.RoutingService",
+	ServiceName: "proto.RoutingService",
 	HandlerType: (*RoutingServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -163,5 +163,5 @@ var RoutingService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "internal/service/route_service/proto/route.proto",
+	Metadata: "routing.proto",
 }
