@@ -1,10 +1,14 @@
 package server
 
 import (
+	"context"
 	"log"
 	"net/http"
 	"runtime/debug"
+	"strings"
 	"time"
+
+	authpkg "github.com/Marwan051/final_project_backend/internal/auth"
 )
 
 type Middleware func(http.Handler) http.Handler
@@ -68,5 +72,77 @@ func Headers(next http.Handler) http.Handler {
 		}
 
 		next.ServeHTTP(w, r)
+	})
+}
+
+// Context keys for storing user info
+type contextKey string
+
+const (
+	ctxKeyUserUID    contextKey = "userUID"
+	ctxKeyUserClaims contextKey = "userClaims"
+)
+
+// Auth returns a middleware that validates Firebase ID tokens using the provided Verifier.
+func Auth(verifier authpkg.Verifier) Middleware {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			authHeader := r.Header.Get("Authorization")
+			if authHeader == "" {
+				http.Error(w, "missing Authorization header", http.StatusUnauthorized)
+				return
+			}
+			parts := strings.SplitN(authHeader, " ", 2)
+			if len(parts) != 2 || strings.ToLower(parts[0]) != "bearer" {
+				http.Error(w, "invalid Authorization header", http.StatusUnauthorized)
+				return
+			}
+			token := parts[1]
+
+			vt, err := verifier.VerifyIDToken(r.Context(), token)
+			if err != nil {
+				log.Printf("token verify failed: %v", err)
+				http.Error(w, "unauthorized", http.StatusUnauthorized)
+				return
+			}
+
+			ctx := context.WithValue(r.Context(), ctxKeyUserUID, vt.UID)
+			ctx = context.WithValue(ctx, ctxKeyUserClaims, vt.Claims)
+			next.ServeHTTP(w, r.WithContext(ctx))
+		})
+	}
+}
+
+// GetUserUID extracts the Firebase UID from context
+func GetUserUID(ctx context.Context) (string, bool) {
+	v := ctx.Value(ctxKeyUserUID)
+	s, ok := v.(string)
+	return s, ok
+}
+
+// GetUserClaims extracts the verified claims from context
+func GetUserClaims(ctx context.Context) (map[string]interface{}, bool) {
+	v := ctx.Value(ctxKeyUserClaims)
+	m, ok := v.(map[string]any)
+	return m, ok
+}
+
+// RequirePremium enforces that the user has a `premium` boolean claim or a premium role
+func RequirePremium(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		claims, ok := GetUserClaims(r.Context())
+		if !ok {
+			http.Error(w, "forbidden", http.StatusForbidden)
+			return
+		}
+		if premium, ok := claims["premium"].(bool); ok && premium {
+			next.ServeHTTP(w, r)
+			return
+		}
+		if role, ok := claims["role"].(string); ok && (role == "premium") {
+			next.ServeHTTP(w, r)
+			return
+		}
+		http.Error(w, "forbidden", http.StatusForbidden)
 	})
 }

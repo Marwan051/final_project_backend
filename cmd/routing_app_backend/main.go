@@ -9,6 +9,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/Marwan051/final_project_backend/internal/auth"
 	"github.com/Marwan051/final_project_backend/internal/server"
 	"github.com/Marwan051/final_project_backend/internal/service/route_service/pygrpc"
 	"github.com/Marwan051/final_project_backend/internal/utils"
@@ -43,8 +44,14 @@ func main() {
 	}
 	log.Printf("gRPC connection verified at %s", cfg.RoutingServiceAddr)
 
+	// Initialize Firebase Auth verifier using ADC and optional explicit project ID.
+	fbVerifier, err := auth.NewFirebaseVerifierWithProjectID(context.Background(), cfg.EffectiveFirebaseProjectID())
+	if err != nil {
+		log.Fatalf("failed to initialize firebase auth: %v", err)
+	}
+
 	// Create HTTP handler with injected dependencies
-	handler := server.NewHandler(routingService)
+	handler := server.NewHandler(routingService, fbVerifier)
 
 	// Create server
 	srv := &http.Server{
