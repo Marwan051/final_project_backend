@@ -9,6 +9,7 @@ import (
 	"time"
 
 	authpkg "github.com/Marwan051/final_project_backend/internal/auth"
+	"github.com/Marwan051/final_project_backend/internal/utils"
 )
 
 type Middleware func(http.Handler) http.Handler
@@ -87,6 +88,13 @@ const (
 func Auth(verifier authpkg.Verifier) Middleware {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			if utils.Cfg.ENV == "dev" && utils.Cfg.DisableAuth {
+				// Inject a mock dev user to prevent downstream panics
+				ctx := context.WithValue(r.Context(), ctxKeyUserUID, "dev-user-mock-uid")
+				next.ServeHTTP(w, r.WithContext(ctx))
+				return
+			}
+
 			authHeader := r.Header.Get("Authorization")
 			if authHeader == "" {
 				http.Error(w, "missing Authorization header", http.StatusUnauthorized)

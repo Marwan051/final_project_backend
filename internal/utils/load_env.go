@@ -12,6 +12,10 @@ type Config struct {
 	Port               string `env:"PORT,required"`
 	ENV                string `env:"ENV,required"`
 	RoutingServiceAddr string `env:"ROUTING_SERVICE_ADDR,required"`
+	DbToolsAddr        string `env:"DB_TOOLS_ADDR,required"`
+	GeocodingAddr      string `env:"GEOCODING_ADDR,required"`
+	TrafficUpdaterAddr string `env:"TRAFFIC_UPDATER_ADDR,required"`
+	DisableAuth        bool   `env:"DISABLE_AUTH" envDefault:"false"`
 	FirebaseProjectID  string `env:"FIREBASE_PROJECT_ID"`
 	GoogleCloudProject string `env:"GOOGLE_CLOUD_PROJECT"`
 }
