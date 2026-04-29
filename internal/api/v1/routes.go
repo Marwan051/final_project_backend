@@ -26,7 +26,6 @@ func NewRouter(
 	geocodingHandler := handlers.NewGeocodingHandler(geocodingService)
 	trafficHandler := handlers.NewTrafficHandler(trafficService)
 
-	// Health check (if desired locally, but it's already mapped at the global mux level inside server.go)
 	mux.HandleFunc("GET /health", HealthHandler)
 
 	// Routing endpoint
