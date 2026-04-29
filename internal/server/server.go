@@ -3,12 +3,15 @@ package server
 import (
 	"net/http"
 
+	_ "github.com/Marwan051/final_project_backend/docs"
 	v1 "github.com/Marwan051/final_project_backend/internal/api/v1"
 	authpkg "github.com/Marwan051/final_project_backend/internal/auth"
 	"github.com/Marwan051/final_project_backend/internal/service/db_tools"
 	"github.com/Marwan051/final_project_backend/internal/service/geocoding"
 	route_service "github.com/Marwan051/final_project_backend/internal/service/routing"
 	"github.com/Marwan051/final_project_backend/internal/service/traffic_updater"
+	"github.com/Marwan051/final_project_backend/internal/utils"
+	httpSwagger "github.com/swaggo/http-swagger/v2"
 )
 
 // NewHandler creates the application's HTTP handler with middleware
@@ -27,9 +30,16 @@ func NewHandler(
 
 	// Main router
 	mux := http.NewServeMux()
-	
+
 	// Unauthenticated routes
 	mux.HandleFunc("GET /health", v1.HealthHandler)
+
+	// Swagger UI endpoint (unauthenticated, dev only)
+	if utils.Cfg.ENV == "dev" {
+		mux.Handle("/docs/", httpSwagger.Handler(
+			httpSwagger.URL("/docs/doc.json"), //The url pointing to API definition
+		))
+	}
 
 	// Authenticated routes
 	mux.Handle("/api/v1/", http.StripPrefix("/api/v1", protectedV1Router))

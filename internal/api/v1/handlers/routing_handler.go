@@ -19,6 +19,18 @@ func NewRoutingHandler(router route_service.Router) *RoutingHandler {
 	}
 }
 
+// FindRoute finds the best route between two points
+// @Summary      Find Route
+// @Description  Calculates the best route from start coordinates to end coordinates
+// @Tags         routing
+// @Accept       json
+// @Produce      json
+// @Param        request body route_service.RouteRequest true "Route Request"
+// @Success      200  {object}  route_service.RouteResponse
+// @Failure      400  {object}  map[string]string
+// @Failure      500  {object}  map[string]string
+// @Security     ApiKeyAuth
+// @Router       /api/v1/route [post]
 func (h *RoutingHandler) FindRoute(w http.ResponseWriter, r *http.Request) {
 	var req route_service.RouteRequest
 

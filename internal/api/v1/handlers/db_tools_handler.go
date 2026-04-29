@@ -19,6 +19,18 @@ func NewDbToolsHandler(client db_tools.DbTools) *DbToolsHandler {
 	}
 }
 
+// NearbyTrips gets nearby trips
+// @Summary      Get Nearby Trips
+// @Description  Finds trips near a given location within a specified radius
+// @Tags         db_tools
+// @Accept       json
+// @Produce      json
+// @Param        request body pb.NearbyTripsRequest true "Nearby Trips Request"
+// @Success      200  {object}  pb.NearbyTripsResponse
+// @Failure      400  {object}  map[string]string
+// @Failure      500  {object}  map[string]string
+// @Security     ApiKeyAuth
+// @Router       /api/v1/nearby-trips [post]
 func (h *DbToolsHandler) NearbyTrips(w http.ResponseWriter, r *http.Request) {
 	var req pb.NearbyTripsRequest
 	if err := utils.DecodeJSONBody(r, &req); err != nil {

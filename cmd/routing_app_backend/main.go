@@ -18,6 +18,11 @@ import (
 	"github.com/Marwan051/final_project_backend/internal/utils"
 )
 
+// @title           Routing App Backend API
+// @version         1.0
+// @description     This is the API server for the Routing App Backend.
+// @host            localhost:8080
+// @BasePath        /
 func main() {
 	// Load configuration
 	if err := utils.LoadENV(); err != nil {

@@ -53,6 +53,13 @@ type HealthResponse struct {
 }
 
 // HealthHandler returns the health status of the service
+// @Summary      Health Check
+// @Description  Returns the health status of the backend service
+// @Tags         system
+// @Accept       json
+// @Produce      json
+// @Success      200  {object}  HealthResponse
+// @Router       /health [get]
 func HealthHandler(w http.ResponseWriter, r *http.Request) {
 	response := HealthResponse{
 		Status:    "ok",

@@ -19,6 +19,18 @@ func NewGeocodingHandler(client geocoding.Geocoding) *GeocodingHandler {
 	}
 }
 
+// Geocode converts an address or place into coordinates
+// @Summary      Geocode Address
+// @Description  Converts a text address into latitude and longitude coordinates
+// @Tags         geocoding
+// @Accept       json
+// @Produce      json
+// @Param        request body pb.GeocodeRequest true "Geocode Request (Address)"
+// @Success      200  {object}  pb.GeocodeResponse
+// @Failure      400  {object}  map[string]string
+// @Failure      500  {object}  map[string]string
+// @Security     ApiKeyAuth
+// @Router       /api/v1/geocode [post]
 func (h *GeocodingHandler) Geocode(w http.ResponseWriter, r *http.Request) {
 	var req pb.GeocodeRequest
 	if err := utils.DecodeJSONBody(r, &req); err != nil {
