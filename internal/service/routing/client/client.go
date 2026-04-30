@@ -3,7 +3,6 @@ package client
 import (
 	"context"
 	"fmt"
-	"strconv"
 	"time"
 
 	route_service "github.com/Marwan051/final_project_backend/internal/service/routing"
@@ -61,36 +60,20 @@ func (c *RoutingClient) FindRoute(ctx context.Context, req route_service.RouteRe
 
 	req.ApplyDefaults()
 
-	var excludeModes []string
-	if req.RestrictedModes != nil {
-		excludeModes = req.RestrictedModes
-	}
-
-	filters := &pb.Filters{}
-	if len(excludeModes) > 0 {
-		filters.Modes = &pb.FilterBlock{
-			Exclude: excludeModes,
-		}
-	}
-
 	pbReq := &pb.JourneyRequest{
 		StartLat:      req.StartLat,
 		StartLon:      req.StartLon,
 		EndLat:        req.EndLat,
 		EndLon:        req.EndLon,
 		MaxTransfers:  req.MaxTransfers,
-		WalkingCutoff: int32(req.WalkingCutoff),
+		WalkingCutoff: req.WalkingCutoff,
+		Priority:      req.Priority,
 		TopK:          req.TopK,
-		Filters:       filters,
+		Filters:       mapFilters(req.Filters),
 	}
 
-	if req.Weights != nil {
-		pbReq.Weights = map[string]float64{
-			"time":     req.Weights.Time,
-			"cost":     req.Weights.Cost,
-			"walk":     req.Weights.Walk,
-			"transfer": req.Weights.Transfer,
-		}
+	if len(req.Weights) > 0 {
+		pbReq.Weights = copyFloat64Map(req.Weights)
 	}
 
 	resp, err := c.client.FindJourneys(ctx, pbReq)
@@ -112,93 +95,134 @@ func (c *RoutingClient) HealthCheck(ctx context.Context) (bool, error) {
 	return true, nil
 }
 
-func decodePolyline(encoded string) []route_service.Coordinate {
-	// A placeholder for polyline decoding if the domain model requires it
-	return []route_service.Coordinate{}
+func mapFilterBlock(block *route_service.FilterBlock) *pb.FilterBlock {
+	if block == nil {
+		return nil
+	}
+
+	return &pb.FilterBlock{
+		Include:      append([]string(nil), block.Include...),
+		Exclude:      append([]string(nil), block.Exclude...),
+		IncludeMatch: block.IncludeMatch,
+	}
 }
 
-func parseStop(info *pb.StopInfo) route_service.Stop {
+func mapFilters(filters *route_service.Filters) *pb.Filters {
+	if filters == nil {
+		return nil
+	}
+
+	pbFilters := &pb.Filters{}
+	pbFilters.Modes = mapFilterBlock(filters.Modes)
+	pbFilters.MainStreets = mapFilterBlock(filters.MainStreets)
+
+	if pbFilters.Modes == nil && pbFilters.MainStreets == nil {
+		return nil
+	}
+
+	return pbFilters
+}
+
+func copyFloat64Map(values map[string]float64) map[string]float64 {
+	if len(values) == 0 {
+		return nil
+	}
+
+	result := make(map[string]float64, len(values))
+	for key, value := range values {
+		result[key] = value
+	}
+
+	return result
+}
+
+func mapStopInfo(info *pb.StopInfo) *route_service.StopInfo {
 	if info == nil {
-		return route_service.Stop{}
+		return nil
 	}
-	id, _ := strconv.Atoi(info.StopId)
-	coord := route_service.Coordinate{}
-	if len(info.Coord) >= 2 {
-		coord.Lon = info.Coord[0]
-		coord.Lat = info.Coord[1]
-	}
-	return route_service.Stop{
-		StopID: id,
+
+	return &route_service.StopInfo{
+		StopID: info.StopId,
 		Name:   info.Name,
-		Coord:  coord,
+		NameAr: info.NameAr,
+		Coord:  append([]float64(nil), info.Coord...),
 	}
 }
 
 func mapProtoToDomain(resp *pb.JourneyResponse) route_service.RouteResponse {
+	if resp == nil {
+		return route_service.RouteResponse{}
+	}
+
 	journeys := make([]route_service.Journey, 0, len(resp.Journeys))
 	for _, pj := range resp.Journeys {
 		legs := make([]route_service.Leg, 0, len(pj.Legs))
 		for _, pl := range pj.Legs {
-			leg := route_service.Leg{
-				Type: pl.Type,
-			}
-
-			switch pl.Type {
-			case "walk":
-				leg.Walk = &route_service.WalkLeg{
-					DistanceMeters:  int(pl.DistanceMeters),
-					DurationMinutes: int(pl.DurationMinutes),
-					Path:            decodePolyline(pl.Polyline),
-				}
-			case "trip":
-				leg.Trip = &route_service.TripLeg{
-					TripID:          pl.TripId,
-					Mode:            pl.ModeEn,
-					RouteShortName:  pl.RouteShortName,
-					Headsign:        pl.Headsign,
-					Fare:            pl.Fare,
-					DurationMinutes: int(pl.DurationMinutes),
-					From:            parseStop(pl.FromStop),
-					To:              parseStop(pl.ToStop),
-					Path:            decodePolyline(pl.Polyline),
-				}
-			case "transfer":
-				leg.Transfer = &route_service.TransferLeg{
-					FromTripID:            pl.FromTripId,
-					ToTripID:              pl.ToTripId,
-					FromTripName:          pl.FromTripName,
-					ToTripName:            pl.ToTripName,
-					WalkingDistanceMeters: int(pl.WalkingDistanceMeters),
-					DurationMinutes:       int(pl.DurationMinutes),
-					Path:                  decodePolyline(pl.Polyline),
-				}
-			}
-			legs = append(legs, leg)
+			legs = append(legs, route_service.Leg{
+				Type:                  pl.Type,
+				DistanceMeters:        pl.DistanceMeters,
+				DurationMinutes:       pl.DurationMinutes,
+				Polyline:              pl.Polyline,
+				TripID:                pl.TripId,
+				TripIDs:               append([]string(nil), pl.TripIds...),
+				ModeEn:                pl.ModeEn,
+				ModeAr:                pl.ModeAr,
+				RouteShortName:        pl.RouteShortName,
+				RouteShortNameAr:      pl.RouteShortNameAr,
+				Headsign:              pl.Headsign,
+				HeadsignAr:            pl.HeadsignAr,
+				Fare:                  pl.Fare,
+				FromStop:              mapStopInfo(pl.FromStop),
+				ToStop:                mapStopInfo(pl.ToStop),
+				FromTripID:            pl.FromTripId,
+				ToTripID:              pl.ToTripId,
+				FromTripName:          pl.FromTripName,
+				FromTripNameAr:        pl.FromTripNameAr,
+				ToTripName:            pl.ToTripName,
+				ToTripNameAr:          pl.ToTripNameAr,
+				EndStopID:             pl.EndStopId,
+				WalkingDistanceMeters: pl.WalkingDistanceMeters,
+			})
 		}
 
-		summary := route_service.JourneySummary{
-			TotalTimeMinutes:      int(pj.Summary.TotalTimeMinutes),
-			TotalDistanceMeters:   int(pj.Summary.TotalDistanceMeters),
-			WalkingDistanceMeters: int(pj.Summary.WalkingDistanceMeters),
-			Transfers:             int(pj.Summary.Transfers),
-			Cost:                  pj.Summary.Cost,
-			Modes:                 pj.Summary.ModesEn,
+		var summary *route_service.JourneySummary
+		if pj.Summary != nil {
+			summary = &route_service.JourneySummary{
+				TotalTimeMinutes:      pj.Summary.TotalTimeMinutes,
+				WalkingDistanceMeters: pj.Summary.WalkingDistanceMeters,
+				TransitDistanceMeters: pj.Summary.TransitDistanceMeters,
+				TotalDistanceMeters:   pj.Summary.TotalDistanceMeters,
+				Transfers:             pj.Summary.Transfers,
+				Cost:                  pj.Summary.Cost,
+				ModesEn:               append([]string(nil), pj.Summary.ModesEn...),
+				ModesAr:               append([]string(nil), pj.Summary.ModesAr...),
+				MainStreetsEn:         append([]string(nil), pj.Summary.MainStreetsEn...),
+				MainStreetsAr:         append([]string(nil), pj.Summary.MainStreetsAr...),
+			}
 		}
 
 		journeys = append(journeys, route_service.Journey{
-			ID:          int(pj.Id),
-			TextSummary: pj.TextSummaryEn,
-			Summary:     summary,
-			Legs:        legs,
+			ID:             pj.Id,
+			TextSummary:    pj.TextSummary,
+			TextSummaryEn:  pj.TextSummaryEn,
+			Summary:        summary,
+			Legs:           legs,
+			Labels:         append([]string(nil), pj.Labels...),
+			LabelsAr:       append([]string(nil), pj.LabelsAr...),
+			RecommendedFor: pj.RecommendedFor,
 		})
 	}
 
 	return route_service.RouteResponse{
-		NumJourneys:      int(resp.NumJourneys),
+		GeometryEncoding: resp.GeometryEncoding,
+		SelectedPriority: resp.SelectedPriority,
+		WeightsUsed:      copyFloat64Map(resp.WeightsUsed),
+		NumJourneys:      resp.NumJourneys,
 		Journeys:         journeys,
-		StartTripsFound:  int(resp.StartTripsFound),
-		EndTripsFound:    int(resp.EndTripsFound),
-		TotalRoutesFound: int(resp.TotalRoutesFound),
+		StartTripsFound:  resp.StartTripsFound,
+		EndTripsFound:    resp.EndTripsFound,
+		TotalRoutesFound: resp.TotalRoutesFound,
+		TotalAfterDedup:  resp.TotalAfterDedup,
 		Error:            resp.Error,
 	}
 }

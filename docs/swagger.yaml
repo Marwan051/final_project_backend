@@ -109,31 +109,68 @@ definitions:
       longitude:
         type: number
     type: object
-  github_com_Marwan051_final_project_backend_internal_service_routing.Coordinate:
+  github_com_Marwan051_final_project_backend_internal_service_routing.FilterBlock:
     properties:
-      lat:
-        type: number
-      lon:
-        type: number
+      exclude:
+        items:
+          type: string
+        type: array
+      include:
+        items:
+          type: string
+        type: array
+      include_match:
+        type: string
+    type: object
+  github_com_Marwan051_final_project_backend_internal_service_routing.Filters:
+    properties:
+      main_streets:
+        $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.FilterBlock'
+      modes:
+        $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.FilterBlock'
     type: object
   github_com_Marwan051_final_project_backend_internal_service_routing.Journey:
     properties:
       id:
         type: integer
+      labels:
+        items:
+          type: string
+        type: array
+      labels_ar:
+        items:
+          type: string
+        type: array
       legs:
         items:
           $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.Leg'
         type: array
+      recommended_for:
+        type: string
       summary:
         $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.JourneySummary'
       text_summary:
+        type: string
+      text_summary_en:
         type: string
     type: object
   github_com_Marwan051_final_project_backend_internal_service_routing.JourneySummary:
     properties:
       cost:
         type: number
-      modes:
+      main_streets_ar:
+        items:
+          type: string
+        type: array
+      main_streets_en:
+        items:
+          type: string
+        type: array
+      modes_ar:
+        items:
+          type: string
+        type: array
+      modes_en:
         items:
           type: string
         type: array
@@ -143,20 +180,61 @@ definitions:
         type: integer
       transfers:
         type: integer
+      transit_distance_meters:
+        type: integer
       walking_distance_meters:
         type: integer
     type: object
   github_com_Marwan051_final_project_backend_internal_service_routing.Leg:
     properties:
-      transfer:
-        $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.TransferLeg'
-      trip:
-        $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.TripLeg'
-      type:
-        description: '"walk", "trip", or "transfer"'
+      distance_meters:
+        type: integer
+      duration_minutes:
+        type: integer
+      end_stop_id:
         type: string
-      walk:
-        $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.WalkLeg'
+      fare:
+        type: number
+      from_stop:
+        $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.StopInfo'
+      from_trip_id:
+        type: string
+      from_trip_name:
+        type: string
+      from_trip_name_ar:
+        type: string
+      headsign:
+        type: string
+      headsign_ar:
+        type: string
+      mode_ar:
+        type: string
+      mode_en:
+        type: string
+      polyline:
+        type: string
+      route_short_name:
+        type: string
+      route_short_name_ar:
+        type: string
+      to_stop:
+        $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.StopInfo'
+      to_trip_id:
+        type: string
+      to_trip_name:
+        type: string
+      to_trip_name_ar:
+        type: string
+      trip_id:
+        type: string
+      trip_ids:
+        items:
+          type: string
+        type: array
+      type:
+        type: string
+      walking_distance_meters:
+        type: integer
     type: object
   github_com_Marwan051_final_project_backend_internal_service_routing.RouteRequest:
     properties:
@@ -164,12 +242,12 @@ definitions:
         type: number
       end_lon:
         type: number
+      filters:
+        $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.Filters'
       max_transfers:
         type: integer
-      restricted_modes:
-        items:
-          type: string
-        type: array
+      priority:
+        type: string
       start_lat:
         type: number
       start_lon:
@@ -177,9 +255,12 @@ definitions:
       top_k:
         type: integer
       walking_cutoff:
-        type: number
+        type: integer
       weights:
-        $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.RoutingWeights'
+        additionalProperties:
+          format: float64
+          type: number
+        type: object
     type: object
   github_com_Marwan051_final_project_backend_internal_service_routing.RouteResponse:
     properties:
@@ -187,89 +268,40 @@ definitions:
         type: integer
       error:
         type: string
+      geometry_encoding:
+        type: string
       journeys:
         items:
           $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.Journey'
         type: array
       num_journeys:
         type: integer
+      selected_priority:
+        type: string
       start_trips_found:
+        type: integer
+      total_after_dedup:
         type: integer
       total_routes_found:
         type: integer
+      weights_used:
+        additionalProperties:
+          format: float64
+          type: number
+        type: object
     type: object
-  github_com_Marwan051_final_project_backend_internal_service_routing.RoutingWeights:
-    properties:
-      cost:
-        type: number
-      time:
-        type: number
-      transfer:
-        type: number
-      walk:
-        type: number
-    type: object
-  github_com_Marwan051_final_project_backend_internal_service_routing.Stop:
+  github_com_Marwan051_final_project_backend_internal_service_routing.StopInfo:
     properties:
       coord:
-        $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.Coordinate'
+        items:
+          type: number
+        type: array
       name:
         type: string
+      name_ar:
+        type: string
       stop_id:
-        type: integer
-    type: object
-  github_com_Marwan051_final_project_backend_internal_service_routing.TransferLeg:
-    properties:
-      duration_minutes:
-        type: integer
-      from_trip_id:
         type: string
-      from_trip_name:
-        type: string
-      path:
-        items:
-          $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.Coordinate'
-        type: array
-      to_trip_id:
-        type: string
-      to_trip_name:
-        type: string
-      walking_distance_meters:
-        type: integer
-    type: object
-  github_com_Marwan051_final_project_backend_internal_service_routing.TripLeg:
-    properties:
-      duration_minutes:
-        type: integer
-      fare:
-        type: number
-      from:
-        $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.Stop'
-      headsign:
-        type: string
-      mode:
-        type: string
-      path:
-        items:
-          $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.Coordinate'
-        type: array
-      route_short_name:
-        type: string
-      to:
-        $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.Stop'
-      trip_id:
-        type: string
-    type: object
-  github_com_Marwan051_final_project_backend_internal_service_routing.WalkLeg:
-    properties:
-      distance_meters:
-        type: integer
-      duration_minutes:
-        type: integer
-      path:
-        items:
-          $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.Coordinate'
-        type: array
     type: object
   github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.StatusResponse:
     properties:

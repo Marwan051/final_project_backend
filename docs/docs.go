@@ -616,14 +616,34 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_Marwan051_final_project_backend_internal_service_routing.Coordinate": {
+        "github_com_Marwan051_final_project_backend_internal_service_routing.FilterBlock": {
             "type": "object",
             "properties": {
-                "lat": {
-                    "type": "number"
+                "exclude": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
-                "lon": {
-                    "type": "number"
+                "include": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "include_match": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_Marwan051_final_project_backend_internal_service_routing.Filters": {
+            "type": "object",
+            "properties": {
+                "main_streets": {
+                    "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.FilterBlock"
+                },
+                "modes": {
+                    "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.FilterBlock"
                 }
             }
         },
@@ -633,16 +653,34 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
+                "labels": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "labels_ar": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
                 "legs": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.Leg"
                     }
                 },
+                "recommended_for": {
+                    "type": "string"
+                },
                 "summary": {
                     "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.JourneySummary"
                 },
                 "text_summary": {
+                    "type": "string"
+                },
+                "text_summary_en": {
                     "type": "string"
                 }
             }
@@ -653,7 +691,25 @@ const docTemplate = `{
                 "cost": {
                     "type": "number"
                 },
-                "modes": {
+                "main_streets_ar": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "main_streets_en": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "modes_ar": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "modes_en": {
                     "type": "array",
                     "items": {
                         "type": "string"
@@ -668,6 +724,9 @@ const docTemplate = `{
                 "transfers": {
                     "type": "integer"
                 },
+                "transit_distance_meters": {
+                    "type": "integer"
+                },
                 "walking_distance_meters": {
                     "type": "integer"
                 }
@@ -676,18 +735,77 @@ const docTemplate = `{
         "github_com_Marwan051_final_project_backend_internal_service_routing.Leg": {
             "type": "object",
             "properties": {
-                "transfer": {
-                    "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.TransferLeg"
+                "distance_meters": {
+                    "type": "integer"
                 },
-                "trip": {
-                    "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.TripLeg"
+                "duration_minutes": {
+                    "type": "integer"
                 },
-                "type": {
-                    "description": "\"walk\", \"trip\", or \"transfer\"",
+                "end_stop_id": {
                     "type": "string"
                 },
-                "walk": {
-                    "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.WalkLeg"
+                "fare": {
+                    "type": "number"
+                },
+                "from_stop": {
+                    "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.StopInfo"
+                },
+                "from_trip_id": {
+                    "type": "string"
+                },
+                "from_trip_name": {
+                    "type": "string"
+                },
+                "from_trip_name_ar": {
+                    "type": "string"
+                },
+                "headsign": {
+                    "type": "string"
+                },
+                "headsign_ar": {
+                    "type": "string"
+                },
+                "mode_ar": {
+                    "type": "string"
+                },
+                "mode_en": {
+                    "type": "string"
+                },
+                "polyline": {
+                    "type": "string"
+                },
+                "route_short_name": {
+                    "type": "string"
+                },
+                "route_short_name_ar": {
+                    "type": "string"
+                },
+                "to_stop": {
+                    "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.StopInfo"
+                },
+                "to_trip_id": {
+                    "type": "string"
+                },
+                "to_trip_name": {
+                    "type": "string"
+                },
+                "to_trip_name_ar": {
+                    "type": "string"
+                },
+                "trip_id": {
+                    "type": "string"
+                },
+                "trip_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "type": {
+                    "type": "string"
+                },
+                "walking_distance_meters": {
+                    "type": "integer"
                 }
             }
         },
@@ -700,14 +818,14 @@ const docTemplate = `{
                 "end_lon": {
                     "type": "number"
                 },
+                "filters": {
+                    "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.Filters"
+                },
                 "max_transfers": {
                     "type": "integer"
                 },
-                "restricted_modes": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
+                "priority": {
+                    "type": "string"
                 },
                 "start_lat": {
                     "type": "number"
@@ -719,10 +837,14 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "walking_cutoff": {
-                    "type": "number"
+                    "type": "integer"
                 },
                 "weights": {
-                    "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.RoutingWeights"
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "number",
+                        "format": "float64"
+                    }
                 }
             }
         },
@@ -735,6 +857,9 @@ const docTemplate = `{
                 "error": {
                     "type": "string"
                 },
+                "geometry_encoding": {
+                    "type": "string"
+                },
                 "journeys": {
                     "type": "array",
                     "items": {
@@ -744,123 +869,44 @@ const docTemplate = `{
                 "num_journeys": {
                     "type": "integer"
                 },
+                "selected_priority": {
+                    "type": "string"
+                },
                 "start_trips_found": {
+                    "type": "integer"
+                },
+                "total_after_dedup": {
                     "type": "integer"
                 },
                 "total_routes_found": {
                     "type": "integer"
+                },
+                "weights_used": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "number",
+                        "format": "float64"
+                    }
                 }
             }
         },
-        "github_com_Marwan051_final_project_backend_internal_service_routing.RoutingWeights": {
-            "type": "object",
-            "properties": {
-                "cost": {
-                    "type": "number"
-                },
-                "time": {
-                    "type": "number"
-                },
-                "transfer": {
-                    "type": "number"
-                },
-                "walk": {
-                    "type": "number"
-                }
-            }
-        },
-        "github_com_Marwan051_final_project_backend_internal_service_routing.Stop": {
+        "github_com_Marwan051_final_project_backend_internal_service_routing.StopInfo": {
             "type": "object",
             "properties": {
                 "coord": {
-                    "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.Coordinate"
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
                 },
                 "name": {
                     "type": "string"
                 },
+                "name_ar": {
+                    "type": "string"
+                },
                 "stop_id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "github_com_Marwan051_final_project_backend_internal_service_routing.TransferLeg": {
-            "type": "object",
-            "properties": {
-                "duration_minutes": {
-                    "type": "integer"
-                },
-                "from_trip_id": {
                     "type": "string"
-                },
-                "from_trip_name": {
-                    "type": "string"
-                },
-                "path": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.Coordinate"
-                    }
-                },
-                "to_trip_id": {
-                    "type": "string"
-                },
-                "to_trip_name": {
-                    "type": "string"
-                },
-                "walking_distance_meters": {
-                    "type": "integer"
-                }
-            }
-        },
-        "github_com_Marwan051_final_project_backend_internal_service_routing.TripLeg": {
-            "type": "object",
-            "properties": {
-                "duration_minutes": {
-                    "type": "integer"
-                },
-                "fare": {
-                    "type": "number"
-                },
-                "from": {
-                    "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.Stop"
-                },
-                "headsign": {
-                    "type": "string"
-                },
-                "mode": {
-                    "type": "string"
-                },
-                "path": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.Coordinate"
-                    }
-                },
-                "route_short_name": {
-                    "type": "string"
-                },
-                "to": {
-                    "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.Stop"
-                },
-                "trip_id": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_Marwan051_final_project_backend_internal_service_routing.WalkLeg": {
-            "type": "object",
-            "properties": {
-                "distance_meters": {
-                    "type": "integer"
-                },
-                "duration_minutes": {
-                    "type": "integer"
-                },
-                "path": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.Coordinate"
-                    }
                 }
             }
         },
