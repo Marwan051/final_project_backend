@@ -85,14 +85,14 @@ func main() {
 
 	log.Printf("All gRPC connections verified")
 
-	// Initialize Firebase Auth verifier using ADC and optional explicit project ID.
-	fbVerifier, err := auth.NewFirebaseVerifierWithProjectID(context.Background(), cfg.EffectiveFirebaseProjectID())
+	// Initialize Supabase Auth verifier using the server secret key.
+	supabaseVerifier, err := auth.NewSupabaseVerifier(cfg.SupabaseURL, cfg.EffectiveSupabaseSecretKey())
 	if err != nil {
-		log.Fatalf("failed to initialize firebase auth: %v", err)
+		log.Fatalf("failed to initialize supabase auth: %v", err)
 	}
 
 	// Create HTTP handler with injected dependencies
-	handler := server.NewHandler(routingService, dbToolsService, geocodingService, trafficService, fbVerifier)
+	handler := server.NewHandler(routingService, dbToolsService, geocodingService, trafficService, supabaseVerifier)
 
 	// Create server
 	srv := &http.Server{

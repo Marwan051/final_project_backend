@@ -8,16 +8,17 @@ import (
 )
 
 type Config struct {
-	DBUrl              string `env:"DB_URL,required"`
-	Port               string `env:"PORT,required"`
-	ENV                string `env:"ENV,required"`
-	RoutingServiceAddr string `env:"ROUTING_SERVICE_ADDR,required"`
-	DbToolsAddr        string `env:"DB_TOOLS_ADDR,required"`
-	GeocodingAddr      string `env:"GEOCODING_ADDR,required"`
-	TrafficUpdaterAddr string `env:"TRAFFIC_UPDATER_ADDR,required"`
-	DisableAuth        bool   `env:"DISABLE_AUTH" envDefault:"false"`
-	FirebaseProjectID  string `env:"FIREBASE_PROJECT_ID"`
-	GoogleCloudProject string `env:"GOOGLE_CLOUD_PROJECT"`
+	DBUrl                  string `env:"DB_URL,required"`
+	Port                   string `env:"PORT,required"`
+	ENV                    string `env:"ENV,required"`
+	RoutingServiceAddr     string `env:"ROUTING_SERVICE_ADDR,required"`
+	DbToolsAddr            string `env:"DB_TOOLS_ADDR,required"`
+	GeocodingAddr          string `env:"GEOCODING_ADDR,required"`
+	TrafficUpdaterAddr     string `env:"TRAFFIC_UPDATER_ADDR,required"`
+	DisableAuth            bool   `env:"DISABLE_AUTH" envDefault:"false"`
+	SupabaseURL            string `env:"SUPABASE_URL,required"`
+	SupabaseSecretKey      string `env:"SUPABASE_SECRET_KEY"`
+	SupabaseServiceRoleKey string `env:"SUPABASE_SERVICE_ROLE_KEY"`
 }
 
 // Cfg will hold your application’s config after Load()
@@ -29,10 +30,10 @@ func LoadENV() error {
 	return env.Parse(&Cfg)
 }
 
-// EffectiveFirebaseProjectID returns FIREBASE_PROJECT_ID first, then GOOGLE_CLOUD_PROJECT.
-func (c Config) EffectiveFirebaseProjectID() string {
-	if v := strings.TrimSpace(c.FirebaseProjectID); v != "" {
+// EffectiveSupabaseSecretKey returns the new secret key first, then the legacy service role key.
+func (c Config) EffectiveSupabaseSecretKey() string {
+	if v := strings.TrimSpace(c.SupabaseSecretKey); v != "" {
 		return v
 	}
-	return strings.TrimSpace(c.GoogleCloudProject)
+	return strings.TrimSpace(c.SupabaseServiceRoleKey)
 }

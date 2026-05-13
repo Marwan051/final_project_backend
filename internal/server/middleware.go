@@ -84,7 +84,7 @@ const (
 	ctxKeyUserClaims contextKey = "userClaims"
 )
 
-// Auth returns a middleware that validates Firebase ID tokens using the provided Verifier.
+// Auth returns a middleware that validates Supabase access tokens using the provided Verifier.
 func Auth(verifier authpkg.Verifier) Middleware {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -121,21 +121,59 @@ func Auth(verifier authpkg.Verifier) Middleware {
 	}
 }
 
-// GetUserUID extracts the Firebase UID from context
+// GetUserUID extracts the authenticated user ID from context.
 func GetUserUID(ctx context.Context) (string, bool) {
 	v := ctx.Value(ctxKeyUserUID)
 	s, ok := v.(string)
 	return s, ok
 }
 
-// GetUserClaims extracts the verified claims from context
+// GetUserClaims extracts the verified claims from context.
 func GetUserClaims(ctx context.Context) (map[string]interface{}, bool) {
 	v := ctx.Value(ctxKeyUserClaims)
 	m, ok := v.(map[string]any)
 	return m, ok
 }
 
-// RequirePremium enforces that the user has a `premium` boolean claim or a premium role
+func claimBool(claims map[string]any, key string) (bool, bool) {
+	value, ok := claims[key]
+	if !ok {
+		return false, false
+	}
+	result, ok := value.(bool)
+	return result, ok
+}
+
+func metadataString(claims map[string]any, container, key string) (string, bool) {
+	raw, ok := claims[container]
+	if !ok {
+		return "", false
+	}
+	group, ok := raw.(map[string]any)
+	if !ok {
+		return "", false
+	}
+	value, ok := group[key]
+	if !ok {
+		return "", false
+	}
+	result, ok := value.(string)
+	return result, ok
+}
+
+func metadataBool(claims map[string]any, container, key string) (bool, bool) {
+	raw, ok := claims[container]
+	if !ok {
+		return false, false
+	}
+	group, ok := raw.(map[string]any)
+	if !ok {
+		return false, false
+	}
+	return claimBool(group, key)
+}
+
+// RequirePremium enforces that the user has a premium flag or premium role in Supabase metadata.
 func RequirePremium(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		claims, ok := GetUserClaims(r.Context())
@@ -147,7 +185,15 @@ func RequirePremium(next http.Handler) http.Handler {
 			next.ServeHTTP(w, r)
 			return
 		}
-		if role, ok := claims["role"].(string); ok && (role == "premium") {
+		if premium, ok := metadataBool(claims, "app_metadata", "premium"); ok && premium {
+			next.ServeHTTP(w, r)
+			return
+		}
+		if premiumRole, ok := metadataString(claims, "app_metadata", "role"); ok && premiumRole == "premium" {
+			next.ServeHTTP(w, r)
+			return
+		}
+		if role, ok := claims["role"].(string); ok && role == "premium" {
 			next.ServeHTTP(w, r)
 			return
 		}

@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package agent;
+
+service AgentService {
+  rpc ProcessQuery (AgentRequest) returns (AgentResponse);
+}
+
+message AgentRequest {
+  string user_query = 1;
+  string session_id = 2; // Unique identifier for memory tracking
+}
+
+message AgentResponse {
+  string answer = 1;
+}
