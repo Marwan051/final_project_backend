@@ -6,6 +6,7 @@ import (
 	_ "github.com/Marwan051/final_project_backend/docs"
 	v1 "github.com/Marwan051/final_project_backend/internal/api/v1"
 	authpkg "github.com/Marwan051/final_project_backend/internal/auth"
+	agent_service "github.com/Marwan051/final_project_backend/internal/service/agent"
 	"github.com/Marwan051/final_project_backend/internal/service/db_tools"
 	"github.com/Marwan051/final_project_backend/internal/service/geocoding"
 	route_service "github.com/Marwan051/final_project_backend/internal/service/routing"
@@ -17,13 +18,14 @@ import (
 // NewHandler creates the application's HTTP handler with middleware
 func NewHandler(
 	routingService route_service.Router,
+	agentService agent_service.Agent,
 	dbToolsService db_tools.DbTools,
 	geocodingService geocoding.Geocoding,
 	trafficService traffic_updater.TrafficUpdater,
 	verifier authpkg.Verifier,
 ) http.Handler {
 	// Create v1 router with dependencies
-	v1Router := v1.NewRouter(routingService, dbToolsService, geocodingService, trafficService)
+	v1Router := v1.NewRouter(routingService, agentService, dbToolsService, geocodingService, trafficService)
 
 	// Apply auth specifically to the v1 sub-router
 	protectedV1Router := Auth(verifier)(v1Router)

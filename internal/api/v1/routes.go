@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/Marwan051/final_project_backend/internal/api/v1/handlers"
+	agent_service "github.com/Marwan051/final_project_backend/internal/service/agent"
 	"github.com/Marwan051/final_project_backend/internal/service/db_tools"
 	"github.com/Marwan051/final_project_backend/internal/service/geocoding"
 	route_service "github.com/Marwan051/final_project_backend/internal/service/routing"
@@ -15,6 +16,7 @@ import (
 // NewRouter returns a new router with all v1 API routes
 func NewRouter(
 	routingService route_service.Router,
+	agentService agent_service.Agent,
 	dbToolsService db_tools.DbTools,
 	geocodingService geocoding.Geocoding,
 	trafficService traffic_updater.TrafficUpdater,
@@ -22,6 +24,7 @@ func NewRouter(
 	mux := http.NewServeMux()
 
 	routingHandler := handlers.NewRoutingHandler(routingService)
+	agentHandler := handlers.NewAgentHandler(agentService)
 	dbToolsHandler := handlers.NewDbToolsHandler(dbToolsService)
 	geocodingHandler := handlers.NewGeocodingHandler(geocodingService)
 	trafficHandler := handlers.NewTrafficHandler(trafficService)
@@ -30,6 +33,9 @@ func NewRouter(
 
 	// Routing endpoint
 	mux.HandleFunc("POST /route", routingHandler.FindRoute)
+
+	// Agent endpoint
+	mux.HandleFunc("POST /agent/query", agentHandler.Query)
 
 	// Geocoding endpoints
 	mux.HandleFunc("POST /geocode", geocodingHandler.Geocode)

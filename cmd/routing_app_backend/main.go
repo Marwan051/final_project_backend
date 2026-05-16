@@ -11,6 +11,7 @@ import (
 
 	"github.com/Marwan051/final_project_backend/internal/auth"
 	"github.com/Marwan051/final_project_backend/internal/server"
+	agent_client "github.com/Marwan051/final_project_backend/internal/service/agent/client"
 	db_tools_client "github.com/Marwan051/final_project_backend/internal/service/db_tools/client"
 	geocoding_client "github.com/Marwan051/final_project_backend/internal/service/geocoding/client"
 	routing_client "github.com/Marwan051/final_project_backend/internal/service/routing/client"
@@ -38,6 +39,15 @@ func main() {
 		log.Fatalf("Failed to connect to routing service: %v", err)
 	}
 	defer routingService.Close()
+
+	// load agent service
+	agentService, err := agent_client.NewAgentClient(agent_client.ClientConfig{
+		Address: cfg.AgentServiceAddr,
+	})
+	if err != nil {
+		log.Fatalf("Failed to connect to agent service: %v", err)
+	}
+	defer agentService.Close()
 
 	// load db tools service
 	dbToolsService, err := db_tools_client.NewDbToolsClient(db_tools_client.ClientConfig{
@@ -74,6 +84,10 @@ func main() {
 	if err != nil || !working {
 		log.Fatalf("gRPC routing health check failed: %v", err)
 	}
+	working, err = agentService.HealthCheck(ctx)
+	if err != nil || !working {
+		log.Fatalf("gRPC agent health check failed: %v", err)
+	}
 	working, err = dbToolsService.HealthCheck(ctx)
 	if err != nil || !working {
 		log.Fatalf("gRPC db tools health check failed: %v", err)
@@ -92,7 +106,7 @@ func main() {
 	}
 
 	// Create HTTP handler with injected dependencies
-	handler := server.NewHandler(routingService, dbToolsService, geocodingService, trafficService, supabaseVerifier)
+	handler := server.NewHandler(routingService, agentService, dbToolsService, geocodingService, trafficService, supabaseVerifier)
 
 	// Create server
 	srv := &http.Server{

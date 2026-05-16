@@ -2,15 +2,25 @@ syntax = "proto3";
 
 package agent;
 
+option go_package = "github.com/Marwan051/final_project_backend/internal/service/agent/proto";
+
 service AgentService {
-  rpc ProcessQuery (AgentRequest) returns (AgentResponse);
+  rpc Query(QueryRequest) returns (QueryResponse);
+  rpc HealthCheck(HealthRequest) returns (HealthResponse);
 }
 
-message AgentRequest {
-  string user_query = 1;
-  string session_id = 2; // Unique identifier for memory tracking
+message QueryRequest {
+  string message = 1;
+  string session_id = 2;
 }
 
-message AgentResponse {
-  string answer = 1;
+message QueryResponse {
+  string message = 1;
+  string session_id = 2;
+}
+
+message HealthRequest {}
+
+message HealthResponse {
+  string status = 1;
 }
