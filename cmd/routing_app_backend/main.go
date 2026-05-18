@@ -33,7 +33,8 @@ func main() {
 
 	// load routing service
 	routingService, err := routing_client.NewRoutingClient(routing_client.ClientConfig{
-		Address: cfg.RoutingServiceAddr,
+		Address:        cfg.RoutingServiceAddr,
+		RequestTimeout: cfg.GRPCRequestTimeout,
 	})
 	if err != nil {
 		log.Fatalf("Failed to connect to routing service: %v", err)
@@ -42,7 +43,8 @@ func main() {
 
 	// load agent service
 	agentService, err := agent_client.NewAgentClient(agent_client.ClientConfig{
-		Address: cfg.AgentServiceAddr,
+		Address:        cfg.AgentServiceAddr,
+		RequestTimeout: cfg.GRPCRequestTimeout,
 	})
 	if err != nil {
 		log.Fatalf("Failed to connect to agent service: %v", err)
@@ -51,7 +53,8 @@ func main() {
 
 	// load db tools service
 	dbToolsService, err := db_tools_client.NewDbToolsClient(db_tools_client.ClientConfig{
-		Address: cfg.DbToolsAddr,
+		Address:        cfg.DbToolsAddr,
+		RequestTimeout: cfg.GRPCRequestTimeout,
 	})
 	if err != nil {
 		log.Fatalf("Failed to connect to db tools service: %v", err)
@@ -60,7 +63,8 @@ func main() {
 
 	// load geocoding service
 	geocodingService, err := geocoding_client.NewGeocodingClient(geocoding_client.ClientConfig{
-		Address: cfg.GeocodingAddr,
+		Address:        cfg.GeocodingAddr,
+		RequestTimeout: cfg.GRPCRequestTimeout,
 	})
 	if err != nil {
 		log.Fatalf("Failed to connect to geocoding service: %v", err)
@@ -69,7 +73,8 @@ func main() {
 
 	// load traffic updater service
 	trafficService, err := traffic_client.NewTrafficUpdaterClient(traffic_client.ClientConfig{
-		Address: cfg.TrafficUpdaterAddr,
+		Address:        cfg.TrafficUpdaterAddr,
+		RequestTimeout: cfg.GRPCRequestTimeout,
 	})
 	if err != nil {
 		log.Fatalf("Failed to connect to traffic service: %v", err)

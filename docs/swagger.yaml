@@ -1,5 +1,19 @@
 basePath: /
 definitions:
+  github_com_Marwan051_final_project_backend_internal_service_agent.Request:
+    properties:
+      message:
+        type: string
+      session_id:
+        type: string
+    type: object
+  github_com_Marwan051_final_project_backend_internal_service_agent.Response:
+    properties:
+      message:
+        type: string
+      session_id:
+        type: string
+    type: object
   github_com_Marwan051_final_project_backend_internal_service_db_tools_proto.NearbyTripResult:
     properties:
       closest_stop_id:
@@ -438,6 +452,43 @@ info:
   title: Routing App Backend API
   version: "1.0"
 paths:
+  /api/v1/agent/query:
+    post:
+      consumes:
+      - application/json
+      description: Sends a message to the agent and returns the reply plus session
+        id
+      parameters:
+      - description: Agent Query Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_agent.Request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_agent.Response'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Agent Query
+      tags:
+      - agent
   /api/v1/geocode:
     post:
       consumes:

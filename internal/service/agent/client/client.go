@@ -5,10 +5,12 @@ import (
 	"fmt"
 	"time"
 
+	authpkg "github.com/Marwan051/final_project_backend/internal/server"
 	agent_service "github.com/Marwan051/final_project_backend/internal/service/agent"
 	pb "github.com/Marwan051/final_project_backend/internal/service/agent/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/metadata"
 )
 
 type ClientConfig struct {
@@ -50,30 +52,34 @@ func (c *AgentClient) Close() error {
 	return c.conn.Close()
 }
 
-func (c *AgentClient) Query(ctx context.Context, req agent_service.Request) (agent_service.Response, error) {
+func (c *AgentClient) ProcessQuery(ctx context.Context, req agent_service.AgentRequest) (agent_service.AgentResponse, error) {
 	if err := ctx.Err(); err != nil {
-		return agent_service.Response{}, err
+		return agent_service.AgentResponse{}, err
+	}
+
+	if token, ok := authpkg.GetAuthToken(ctx); ok && token != "" {
+		ctx = metadata.AppendToOutgoingContext(ctx, "authorization", "Bearer "+token)
 	}
 
 	ctx, cancel := context.WithTimeout(ctx, c.requestTimeout)
 	defer cancel()
 
-	resp, err := c.client.Query(ctx, &pb.QueryRequest{
-		Message:   req.Message,
+	resp, err := c.client.ProcessQuery(ctx, &pb.AgentRequest{
+		UserQuery: req.UserQuery,
 		SessionId: req.SessionID,
 	})
 	if err != nil {
-		return agent_service.Response{}, fmt.Errorf("grpc query failed: %w", err)
+		return agent_service.AgentResponse{}, fmt.Errorf("grpc query failed: %w", err)
 	}
 
-	return agent_service.Response{
-		Message:   resp.Message,
+	return agent_service.AgentResponse{
+		Answer:    resp.Answer,
 		SessionID: resp.SessionId,
 	}, nil
 }
 
 func (c *AgentClient) HealthCheck(ctx context.Context) (bool, error) {
-	ctx, cancel := context.WithTimeout(ctx, 15*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, c.requestTimeout)
 	defer cancel()
 
 	_, err := c.client.HealthCheck(ctx, &pb.HealthRequest{})

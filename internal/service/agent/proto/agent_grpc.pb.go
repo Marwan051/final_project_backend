@@ -19,15 +19,15 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AgentService_Query_FullMethodName       = "/agent.AgentService/Query"
-	AgentService_HealthCheck_FullMethodName = "/agent.AgentService/HealthCheck"
+	AgentService_ProcessQuery_FullMethodName = "/agent.AgentService/ProcessQuery"
+	AgentService_HealthCheck_FullMethodName  = "/agent.AgentService/HealthCheck"
 )
 
 // AgentServiceClient is the client API for AgentService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AgentServiceClient interface {
-	Query(ctx context.Context, in *QueryRequest, opts ...grpc.CallOption) (*QueryResponse, error)
+	ProcessQuery(ctx context.Context, in *AgentRequest, opts ...grpc.CallOption) (*AgentResponse, error)
 	HealthCheck(ctx context.Context, in *HealthRequest, opts ...grpc.CallOption) (*HealthResponse, error)
 }
 
@@ -39,10 +39,10 @@ func NewAgentServiceClient(cc grpc.ClientConnInterface) AgentServiceClient {
 	return &agentServiceClient{cc}
 }
 
-func (c *agentServiceClient) Query(ctx context.Context, in *QueryRequest, opts ...grpc.CallOption) (*QueryResponse, error) {
+func (c *agentServiceClient) ProcessQuery(ctx context.Context, in *AgentRequest, opts ...grpc.CallOption) (*AgentResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(QueryResponse)
-	err := c.cc.Invoke(ctx, AgentService_Query_FullMethodName, in, out, cOpts...)
+	out := new(AgentResponse)
+	err := c.cc.Invoke(ctx, AgentService_ProcessQuery_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -63,7 +63,7 @@ func (c *agentServiceClient) HealthCheck(ctx context.Context, in *HealthRequest,
 // All implementations must embed UnimplementedAgentServiceServer
 // for forward compatibility.
 type AgentServiceServer interface {
-	Query(context.Context, *QueryRequest) (*QueryResponse, error)
+	ProcessQuery(context.Context, *AgentRequest) (*AgentResponse, error)
 	HealthCheck(context.Context, *HealthRequest) (*HealthResponse, error)
 	mustEmbedUnimplementedAgentServiceServer()
 }
@@ -75,8 +75,8 @@ type AgentServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAgentServiceServer struct{}
 
-func (UnimplementedAgentServiceServer) Query(context.Context, *QueryRequest) (*QueryResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method Query not implemented")
+func (UnimplementedAgentServiceServer) ProcessQuery(context.Context, *AgentRequest) (*AgentResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ProcessQuery not implemented")
 }
 func (UnimplementedAgentServiceServer) HealthCheck(context.Context, *HealthRequest) (*HealthResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method HealthCheck not implemented")
@@ -102,20 +102,20 @@ func RegisterAgentServiceServer(s grpc.ServiceRegistrar, srv AgentServiceServer)
 	s.RegisterService(&AgentService_ServiceDesc, srv)
 }
 
-func _AgentService_Query_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryRequest)
+func _AgentService_ProcessQuery_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AgentRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AgentServiceServer).Query(ctx, in)
+		return srv.(AgentServiceServer).ProcessQuery(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: AgentService_Query_FullMethodName,
+		FullMethod: AgentService_ProcessQuery_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServiceServer).Query(ctx, req.(*QueryRequest))
+		return srv.(AgentServiceServer).ProcessQuery(ctx, req.(*AgentRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -146,8 +146,8 @@ var AgentService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*AgentServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Query",
-			Handler:    _AgentService_Query_Handler,
+			MethodName: "ProcessQuery",
+			Handler:    _AgentService_ProcessQuery_Handler,
 		},
 		{
 			MethodName: "HealthCheck",

@@ -61,7 +61,7 @@ func (c *GeocodingClient) Geocode(ctx context.Context, req *pb.GeocodeRequest) (
 }
 
 func (c *GeocodingClient) HealthCheck(ctx context.Context) (bool, error) {
-	ctx, cancel := context.WithTimeout(ctx, 15*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, c.requestTimeout)
 	defer cancel()
 
 	_, err := c.client.HealthCheck(ctx, &pb.Empty{})

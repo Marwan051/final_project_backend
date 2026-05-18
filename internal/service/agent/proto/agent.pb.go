@@ -21,28 +21,28 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type QueryRequest struct {
+type AgentRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Message       string                 `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
-	SessionId     string                 `protobuf:"bytes,2,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
+	UserQuery     string                 `protobuf:"bytes,1,opt,name=user_query,json=userQuery,proto3" json:"user_query,omitempty"`
+	SessionId     string                 `protobuf:"bytes,2,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"` // Unique identifier for memory tracking
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *QueryRequest) Reset() {
-	*x = QueryRequest{}
+func (x *AgentRequest) Reset() {
+	*x = AgentRequest{}
 	mi := &file_internal_service_agent_proto_agent_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *QueryRequest) String() string {
+func (x *AgentRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*QueryRequest) ProtoMessage() {}
+func (*AgentRequest) ProtoMessage() {}
 
-func (x *QueryRequest) ProtoReflect() protoreflect.Message {
+func (x *AgentRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_service_agent_proto_agent_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -54,47 +54,47 @@ func (x *QueryRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use QueryRequest.ProtoReflect.Descriptor instead.
-func (*QueryRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use AgentRequest.ProtoReflect.Descriptor instead.
+func (*AgentRequest) Descriptor() ([]byte, []int) {
 	return file_internal_service_agent_proto_agent_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *QueryRequest) GetMessage() string {
+func (x *AgentRequest) GetUserQuery() string {
 	if x != nil {
-		return x.Message
+		return x.UserQuery
 	}
 	return ""
 }
 
-func (x *QueryRequest) GetSessionId() string {
+func (x *AgentRequest) GetSessionId() string {
 	if x != nil {
 		return x.SessionId
 	}
 	return ""
 }
 
-type QueryResponse struct {
+type AgentResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Message       string                 `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
+	Answer        string                 `protobuf:"bytes,1,opt,name=answer,proto3" json:"answer,omitempty"`
 	SessionId     string                 `protobuf:"bytes,2,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *QueryResponse) Reset() {
-	*x = QueryResponse{}
+func (x *AgentResponse) Reset() {
+	*x = AgentResponse{}
 	mi := &file_internal_service_agent_proto_agent_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *QueryResponse) String() string {
+func (x *AgentResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*QueryResponse) ProtoMessage() {}
+func (*AgentResponse) ProtoMessage() {}
 
-func (x *QueryResponse) ProtoReflect() protoreflect.Message {
+func (x *AgentResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_service_agent_proto_agent_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -106,19 +106,19 @@ func (x *QueryResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use QueryResponse.ProtoReflect.Descriptor instead.
-func (*QueryResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use AgentResponse.ProtoReflect.Descriptor instead.
+func (*AgentResponse) Descriptor() ([]byte, []int) {
 	return file_internal_service_agent_proto_agent_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *QueryResponse) GetMessage() string {
+func (x *AgentResponse) GetAnswer() string {
 	if x != nil {
-		return x.Message
+		return x.Answer
 	}
 	return ""
 }
 
-func (x *QueryResponse) GetSessionId() string {
+func (x *AgentResponse) GetSessionId() string {
 	if x != nil {
 		return x.SessionId
 	}
@@ -209,20 +209,21 @@ var File_internal_service_agent_proto_agent_proto protoreflect.FileDescriptor
 
 const file_internal_service_agent_proto_agent_proto_rawDesc = "" +
 	"\n" +
-	"(internal/service/agent/proto/agent.proto\x12\x05agent\"G\n" +
-	"\fQueryRequest\x12\x18\n" +
-	"\amessage\x18\x01 \x01(\tR\amessage\x12\x1d\n" +
+	"(internal/service/agent/proto/agent.proto\x12\x05agent\"L\n" +
+	"\fAgentRequest\x12\x1d\n" +
 	"\n" +
-	"session_id\x18\x02 \x01(\tR\tsessionId\"H\n" +
-	"\rQueryResponse\x12\x18\n" +
-	"\amessage\x18\x01 \x01(\tR\amessage\x12\x1d\n" +
+	"user_query\x18\x01 \x01(\tR\tuserQuery\x12\x1d\n" +
+	"\n" +
+	"session_id\x18\x02 \x01(\tR\tsessionId\"F\n" +
+	"\rAgentResponse\x12\x16\n" +
+	"\x06answer\x18\x01 \x01(\tR\x06answer\x12\x1d\n" +
 	"\n" +
 	"session_id\x18\x02 \x01(\tR\tsessionId\"\x0f\n" +
 	"\rHealthRequest\"(\n" +
 	"\x0eHealthResponse\x12\x16\n" +
-	"\x06status\x18\x01 \x01(\tR\x06status2~\n" +
-	"\fAgentService\x122\n" +
-	"\x05Query\x12\x13.agent.QueryRequest\x1a\x14.agent.QueryResponse\x12:\n" +
+	"\x06status\x18\x01 \x01(\tR\x06status2\x85\x01\n" +
+	"\fAgentService\x129\n" +
+	"\fProcessQuery\x12\x13.agent.AgentRequest\x1a\x14.agent.AgentResponse\x12:\n" +
 	"\vHealthCheck\x12\x14.agent.HealthRequest\x1a\x15.agent.HealthResponseBIZGgithub.com/Marwan051/final_project_backend/internal/service/agent/protob\x06proto3"
 
 var (
@@ -239,15 +240,15 @@ func file_internal_service_agent_proto_agent_proto_rawDescGZIP() []byte {
 
 var file_internal_service_agent_proto_agent_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_internal_service_agent_proto_agent_proto_goTypes = []any{
-	(*QueryRequest)(nil),   // 0: agent.QueryRequest
-	(*QueryResponse)(nil),  // 1: agent.QueryResponse
+	(*AgentRequest)(nil),   // 0: agent.AgentRequest
+	(*AgentResponse)(nil),  // 1: agent.AgentResponse
 	(*HealthRequest)(nil),  // 2: agent.HealthRequest
 	(*HealthResponse)(nil), // 3: agent.HealthResponse
 }
 var file_internal_service_agent_proto_agent_proto_depIdxs = []int32{
-	0, // 0: agent.AgentService.Query:input_type -> agent.QueryRequest
+	0, // 0: agent.AgentService.ProcessQuery:input_type -> agent.AgentRequest
 	2, // 1: agent.AgentService.HealthCheck:input_type -> agent.HealthRequest
-	1, // 2: agent.AgentService.Query:output_type -> agent.QueryResponse
+	1, // 2: agent.AgentService.ProcessQuery:output_type -> agent.AgentResponse
 	3, // 3: agent.AgentService.HealthCheck:output_type -> agent.HealthResponse
 	2, // [2:4] is the sub-list for method output_type
 	0, // [0:2] is the sub-list for method input_type

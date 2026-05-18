@@ -61,7 +61,7 @@ func (c *DbToolsClient) NearbyTrips(ctx context.Context, req *pb.NearbyTripsRequ
 }
 
 func (c *DbToolsClient) HealthCheck(ctx context.Context) (bool, error) {
-	ctx, cancel := context.WithTimeout(ctx, 15*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, c.requestTimeout)
 	defer cancel()
 
 	_, err := c.client.HealthCheck(ctx, &pb.Empty{})

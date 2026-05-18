@@ -8,36 +8,26 @@
    - `PORT`
    - `ENV`
    - `ROUTING_SERVICE_ADDR`
-3. For Firebase Auth token verification, set this when needed:
-   - `FIREBASE_PROJECT_ID` (optional but recommended for local ADC)
+   - `GRPC_REQUEST_TIMEOUT` to override the default 10s gRPC deadline
+3. Configure Supabase auth:
+   - `SUPABASE_URL`
+   - `SUPABASE_SECRET_KEY` or `SUPABASE_SERVICE_ROLE_KEY`
+   - `SUPABASE_PUBLISHABLE_KEY` if you also use the same project from a browser/client app
 
-## Firebase Auth (No JSON Key File Required)
+## Supabase Auth
 
-This project uses Firebase Admin SDK with Application Default Credentials (ADC).
-It does not require a service-account JSON key file for normal local and cloud workflows.
+This backend verifies Supabase access tokens server-side using the Supabase project URL and a server key.
 
-Recommended local setup from latest Google/Firebase docs:
+Supabase's current guidance is to use the publishable key for client-side usage and the secret key for server-side usage. Legacy `anon` and `service_role` keys still work, but the new keys are preferred.
 
-```bash
-gcloud auth application-default login
-```
-
-Then set your Firebase project ID for local dev if not already present:
+Use the project URL and one of the server keys in your environment:
 
 ```bash
-export FIREBASE_PROJECT_ID="your-project-id"
+SUPABASE_URL="https://your-project-id.supabase.co"
+SUPABASE_SECRET_KEY="sb_secret_..."
 ```
 
-Alternative accepted by Firebase Admin SDK:
-
-```bash
-export GOOGLE_CLOUD_PROJECT="your-project-id"
-```
-
-Notes:
-
-- In Google Cloud runtimes, attached service accounts are preferred.
-- Service-account JSON keys still work, but are not the recommended default.
+If your project still uses legacy keys, `SUPABASE_SERVICE_ROLE_KEY` can be used as a fallback.
 
 ## Run
 
@@ -47,22 +37,26 @@ Run with hot reload:
 air
 ```
 
-## Test Firebase Auth End To End
+## Test Supabase Auth End To End
 
 All `/api/v1/*` endpoints are protected by auth middleware, so `/api/v1/health` is a quick auth check.
 
-1. Ensure Email/Password sign-in is enabled in Firebase Auth.
-2. Get your Firebase Web API key from Firebase project settings.
-3. Mint an ID token using the helper script:
+1. Make sure password sign-in is enabled in your Supabase project.
+2. Get your project URL and publishable key from the Supabase dashboard.
+3. Mint an access token with the Supabase Auth password grant:
 
 ```bash
-./test/get_firebase_id_token.sh "<FIREBASE_WEB_API_KEY>" "<EMAIL>" "<PASSWORD>"
+curl -sS -X POST "${SUPABASE_URL}/auth/v1/token?grant_type=password" \
+   -H "apikey: ${SUPABASE_PUBLISHABLE_KEY}" \
+   -H "Authorization: Bearer ${SUPABASE_PUBLISHABLE_KEY}" \
+   -H "Content-Type: application/json" \
+   --data-binary '{"email":"<EMAIL>","password":"<PASSWORD>"}'
 ```
 
-4. Save token and call the protected endpoint:
+4. Copy the `access_token` from the response and call the protected endpoint:
 
 ```bash
-TOKEN="$(./test/get_firebase_id_token.sh "<FIREBASE_WEB_API_KEY>" "<EMAIL>" "<PASSWORD>")"
+TOKEN="<ACCESS_TOKEN>"
 curl -i -H "Authorization: Bearer ${TOKEN}" http://localhost:3000/api/v1/health
 ```
 

@@ -85,7 +85,7 @@ func (c *RoutingClient) FindRoute(ctx context.Context, req route_service.RouteRe
 }
 
 func (c *RoutingClient) HealthCheck(ctx context.Context) (bool, error) {
-	ctx, cancel := context.WithTimeout(ctx, 15*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, c.requestTimeout)
 	defer cancel()
 
 	_, err := c.client.HealthCheck(ctx, &pb.Empty{})

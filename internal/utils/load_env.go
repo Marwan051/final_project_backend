@@ -2,24 +2,26 @@ package utils
 
 import (
 	"strings"
+	"time"
 
 	"github.com/caarlos0/env/v6"
 	"github.com/joho/godotenv"
 )
 
 type Config struct {
-	DBUrl                  string `env:"DB_URL,required"`
-	Port                   string `env:"PORT,required"`
-	ENV                    string `env:"ENV,required"`
-	RoutingServiceAddr     string `env:"ROUTING_SERVICE_ADDR,required"`
-	AgentServiceAddr       string `env:"AGENT_SERVICE_ADDR,required"`
-	DbToolsAddr            string `env:"DB_TOOLS_ADDR,required"`
-	GeocodingAddr          string `env:"GEOCODING_ADDR,required"`
-	TrafficUpdaterAddr     string `env:"TRAFFIC_UPDATER_ADDR,required"`
-	DisableAuth            bool   `env:"DISABLE_AUTH" envDefault:"false"`
-	SupabaseURL            string `env:"SUPABASE_URL,required"`
-	SupabaseSecretKey      string `env:"SUPABASE_SECRET_KEY"`
-	SupabaseServiceRoleKey string `env:"SUPABASE_SERVICE_ROLE_KEY"`
+	DBUrl                  string        `env:"DB_URL,required"`
+	Port                   string        `env:"PORT,required"`
+	ENV                    string        `env:"ENV,required"`
+	GRPCRequestTimeout     time.Duration `env:"GRPC_REQUEST_TIMEOUT" envDefault:"10s"`
+	RoutingServiceAddr     string        `env:"ROUTING_SERVICE_ADDR,required"`
+	AgentServiceAddr       string        `env:"AGENT_SERVICE_ADDR,required"`
+	DbToolsAddr            string        `env:"DB_TOOLS_ADDR,required"`
+	GeocodingAddr          string        `env:"GEOCODING_ADDR,required"`
+	TrafficUpdaterAddr     string        `env:"TRAFFIC_UPDATER_ADDR,required"`
+	DisableAuth            bool          `env:"DISABLE_AUTH" envDefault:"false"`
+	SupabaseURL            string        `env:"SUPABASE_URL,required"`
+	SupabaseSecretKey      string        `env:"SUPABASE_SECRET_KEY"`
+	SupabaseServiceRoleKey string        `env:"SUPABASE_SERVICE_ROLE_KEY"`
 }
 
 // Cfg will hold your application’s config after Load()

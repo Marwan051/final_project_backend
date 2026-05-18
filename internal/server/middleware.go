@@ -82,6 +82,7 @@ type contextKey string
 const (
 	ctxKeyUserUID    contextKey = "userUID"
 	ctxKeyUserClaims contextKey = "userClaims"
+	ctxKeyAuthToken  contextKey = "authToken"
 )
 
 // Auth returns a middleware that validates Supabase access tokens using the provided Verifier.
@@ -116,6 +117,7 @@ func Auth(verifier authpkg.Verifier) Middleware {
 
 			ctx := context.WithValue(r.Context(), ctxKeyUserUID, vt.UID)
 			ctx = context.WithValue(ctx, ctxKeyUserClaims, vt.Claims)
+			ctx = context.WithValue(ctx, ctxKeyAuthToken, token)
 			next.ServeHTTP(w, r.WithContext(ctx))
 		})
 	}
@@ -133,6 +135,13 @@ func GetUserClaims(ctx context.Context) (map[string]interface{}, bool) {
 	v := ctx.Value(ctxKeyUserClaims)
 	m, ok := v.(map[string]any)
 	return m, ok
+}
+
+// GetAuthToken extracts the verified bearer token from context.
+func GetAuthToken(ctx context.Context) (string, bool) {
+	v := ctx.Value(ctxKeyAuthToken)
+	s, ok := v.(string)
+	return s, ok
 }
 
 func claimBool(claims map[string]any, key string) (bool, bool) {
