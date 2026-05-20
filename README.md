@@ -41,20 +41,20 @@ air
 
 `GET /health` is public. Everything under `/api/v1/*` requires a valid Supabase access token, and the two routing maintenance endpoints below also require an admin claim.
 
-| Method | Path | Purpose | Access |
-| --- | --- | --- | --- |
-| `GET` | `/health` | Returns the service health status and current timestamp. | Public |
-| `POST` | `/api/v1/route` | Calculates the best route between two coordinate pairs. | Authenticated |
-| `POST` | `/api/v1/agent/query` | Sends a message to the agent and returns its reply. | Authenticated |
-| `POST` | `/api/v1/geocode` | Converts a text address into latitude and longitude coordinates. | Authenticated |
-| `POST` | `/api/v1/nearby-trips` | Finds trips near a point within a radius. | Authenticated |
-| `POST` | `/api/v1/traffic/trigger` | Starts a traffic update job manually. | Authenticated |
-| `GET` | `/api/v1/traffic/status` | Returns the current traffic update status. | Authenticated |
-| `POST` | `/api/v1/traffic/update-trip` | Submits a trip to affect traffic modelling. | Authenticated |
-| `POST` | `/api/v1/traffic/street` | Returns the calculated traffic load for one street. | Authenticated |
-| `GET` | `/api/v1/traffic/streets` | Lists all tracked streets and their traffic levels. | Authenticated |
-| `POST` | `/api/v1/routing/reload-prefix-times` | Reloads prefix times for the routing graph. | Admin only |
-| `POST` | `/api/v1/routing/rebuild-network` | Rebuilds the routing network from source data. | Admin only |
+| Method | Path                                  | Purpose                                                          | Access        |
+| ------ | ------------------------------------- | ---------------------------------------------------------------- | ------------- |
+| `GET`  | `/health`                             | Returns the service health status and current timestamp.         | Public        |
+| `POST` | `/api/v1/route`                       | Calculates the best route between two coordinate pairs.          | Authenticated |
+| `POST` | `/api/v1/agent/query`                 | Sends a message to the agent and returns its reply.              | Authenticated |
+| `POST` | `/api/v1/geocode`                     | Converts a text address into latitude and longitude coordinates. | Authenticated |
+| `POST` | `/api/v1/nearby-trips`                | Finds trips near a point within a radius.                        | Authenticated |
+| `POST` | `/api/v1/traffic/trigger`             | Starts a traffic update job manually.                            | Authenticated |
+| `GET`  | `/api/v1/traffic/status`              | Returns the current traffic update status.                       | Authenticated |
+| `POST` | `/api/v1/traffic/update-trip`         | Submits a trip to affect traffic modelling.                      | Authenticated |
+| `POST` | `/api/v1/traffic/street`              | Returns the calculated traffic load for one street.              | Authenticated |
+| `GET`  | `/api/v1/traffic/streets`             | Lists all tracked streets and their traffic levels.              | Authenticated |
+| `POST` | `/api/v1/routing/reload-prefix-times` | Reloads prefix times for the routing graph.                      | Admin only    |
+| `POST` | `/api/v1/routing/rebuild-network`     | Rebuilds the routing network from source data.                   | Admin only    |
 
 ## Test Supabase Auth End To End
 
