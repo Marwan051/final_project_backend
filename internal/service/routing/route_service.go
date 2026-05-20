@@ -125,9 +125,18 @@ type RouteResponse struct {
 	Error            string             `json:"error,omitempty"`
 }
 
+// AdminOperationResponse contains the result of an admin-only routing task.
+type AdminOperationResponse struct {
+	Status        string `json:"status,omitempty"`
+	Message       string `json:"message,omitempty"`
+	TripsReloaded int32  `json:"trips_reloaded,omitempty"`
+}
+
 // Router interface for route finding services
 type Router interface {
 	FindRoute(ctx context.Context, req RouteRequest) (RouteResponse, error)
+	ReloadPrefixTimes(ctx context.Context) (AdminOperationResponse, error)
+	RebuildNetwork(ctx context.Context) (AdminOperationResponse, error)
 	HealthCheck(ctx context.Context) (bool, error)
 	Close() error
 }

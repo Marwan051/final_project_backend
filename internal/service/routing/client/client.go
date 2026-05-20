@@ -5,10 +5,12 @@ import (
 	"fmt"
 	"time"
 
+	authpkg "github.com/Marwan051/final_project_backend/internal/server"
 	route_service "github.com/Marwan051/final_project_backend/internal/service/routing"
 	pb "github.com/Marwan051/final_project_backend/internal/service/routing/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/metadata"
 )
 
 type ClientConfig struct {
@@ -95,6 +97,38 @@ func (c *RoutingClient) HealthCheck(ctx context.Context) (bool, error) {
 	return true, nil
 }
 
+func (c *RoutingClient) ReloadPrefixTimes(ctx context.Context) (route_service.AdminOperationResponse, error) {
+	if token, ok := authpkg.GetAuthToken(ctx); ok && token != "" {
+		ctx = metadata.AppendToOutgoingContext(ctx, "authorization", "Bearer "+token)
+	}
+
+	ctx, cancel := context.WithTimeout(ctx, c.requestTimeout)
+	defer cancel()
+
+	resp, err := c.client.ReloadPrefixTimes(ctx, &pb.Empty{})
+	if err != nil {
+		return route_service.AdminOperationResponse{}, fmt.Errorf("grpc reloadprefixtimes failed: %w", err)
+	}
+
+	return mapAdminOperationResponse(resp), nil
+}
+
+func (c *RoutingClient) RebuildNetwork(ctx context.Context) (route_service.AdminOperationResponse, error) {
+	if token, ok := authpkg.GetAuthToken(ctx); ok && token != "" {
+		ctx = metadata.AppendToOutgoingContext(ctx, "authorization", "Bearer "+token)
+	}
+
+	ctx, cancel := context.WithTimeout(ctx, c.requestTimeout)
+	defer cancel()
+
+	resp, err := c.client.RebuildNetwork(ctx, &pb.Empty{})
+	if err != nil {
+		return route_service.AdminOperationResponse{}, fmt.Errorf("grpc rebuildnetwork failed: %w", err)
+	}
+
+	return mapAdminOperationResponse(resp), nil
+}
+
 func mapFilterBlock(block *route_service.FilterBlock) *pb.FilterBlock {
 	if block == nil {
 		return nil
@@ -134,6 +168,18 @@ func copyFloat64Map(values map[string]float64) map[string]float64 {
 	}
 
 	return result
+}
+
+func mapAdminOperationResponse(resp *pb.AdminOperationResponse) route_service.AdminOperationResponse {
+	if resp == nil {
+		return route_service.AdminOperationResponse{}
+	}
+
+	return route_service.AdminOperationResponse{
+		Status:        resp.Status,
+		Message:       resp.Message,
+		TripsReloaded: resp.TripsReloaded,
+	}
 }
 
 func mapStopInfo(info *pb.StopInfo) *route_service.StopInfo {

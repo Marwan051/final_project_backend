@@ -1,15 +1,15 @@
 basePath: /
 definitions:
-  github_com_Marwan051_final_project_backend_internal_service_agent.Request:
+  github_com_Marwan051_final_project_backend_internal_service_agent.AgentRequest:
     properties:
-      message:
-        type: string
       session_id:
         type: string
+      user_query:
+        type: string
     type: object
-  github_com_Marwan051_final_project_backend_internal_service_agent.Response:
+  github_com_Marwan051_final_project_backend_internal_service_agent.AgentResponse:
     properties:
-      message:
+      answer:
         type: string
       session_id:
         type: string
@@ -122,6 +122,15 @@ definitions:
         type: number
       longitude:
         type: number
+    type: object
+  github_com_Marwan051_final_project_backend_internal_service_routing.AdminOperationResponse:
+    properties:
+      message:
+        type: string
+      status:
+        type: string
+      trips_reloaded:
+        type: integer
     type: object
   github_com_Marwan051_final_project_backend_internal_service_routing.FilterBlock:
     properties:
@@ -445,7 +454,6 @@ definitions:
       timestamp:
         type: string
     type: object
-host: localhost:8080
 info:
   contact: {}
   description: This is the API server for the Routing App Backend.
@@ -464,14 +472,14 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_agent.Request'
+          $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_agent.AgentRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_agent.Response'
+            $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_agent.AgentResponse'
         "400":
           description: Bad Request
           schema:
@@ -595,6 +603,52 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Find Route
+      tags:
+      - routing
+  /api/v1/routing/rebuild-network:
+    post:
+      consumes:
+      - application/json
+      description: Admin only. Rebuilds the routing network from source data.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.AdminOperationResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Rebuild Routing Network
+      tags:
+      - routing
+  /api/v1/routing/reload-prefix-times:
+    post:
+      consumes:
+      - application/json
+      description: Admin only. Reloads prefix times for the routing graph.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.AdminOperationResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Reload Prefix Times
       tags:
       - routing
   /api/v1/traffic/status:

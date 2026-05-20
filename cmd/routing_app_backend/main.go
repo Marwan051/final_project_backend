@@ -9,6 +9,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/Marwan051/final_project_backend/docs"
 	"github.com/Marwan051/final_project_backend/internal/auth"
 	"github.com/Marwan051/final_project_backend/internal/server"
 	agent_client "github.com/Marwan051/final_project_backend/internal/service/agent/client"
@@ -22,7 +23,7 @@ import (
 // @title           Routing App Backend API
 // @version         1.0
 // @description     This is the API server for the Routing App Backend.
-// @host            localhost:8080
+// @host
 // @BasePath        /
 func main() {
 	// Load configuration
@@ -30,6 +31,7 @@ func main() {
 		log.Fatalf("failed to load config: %v", err)
 	}
 	cfg := utils.Cfg
+	docs.SwaggerInfo.Host = "localhost:" + cfg.Port
 
 	// load routing service
 	routingService, err := routing_client.NewRoutingClient(routing_client.ClientConfig{

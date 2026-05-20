@@ -984,6 +984,66 @@ func (x *HealthResponse) GetTripsLoaded() int32 {
 	return 0
 }
 
+type AdminOperationResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Status        string                 `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
+	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	TripsReloaded int32                  `protobuf:"varint,3,opt,name=trips_reloaded,json=tripsReloaded,proto3" json:"trips_reloaded,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AdminOperationResponse) Reset() {
+	*x = AdminOperationResponse{}
+	mi := &file_internal_service_routing_proto_routing_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AdminOperationResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AdminOperationResponse) ProtoMessage() {}
+
+func (x *AdminOperationResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_internal_service_routing_proto_routing_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AdminOperationResponse.ProtoReflect.Descriptor instead.
+func (*AdminOperationResponse) Descriptor() ([]byte, []int) {
+	return file_internal_service_routing_proto_routing_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *AdminOperationResponse) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+func (x *AdminOperationResponse) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+func (x *AdminOperationResponse) GetTripsReloaded() int32 {
+	if x != nil {
+		return x.TripsReloaded
+	}
+	return 0
+}
+
 var File_internal_service_routing_proto_routing_proto protoreflect.FileDescriptor
 
 const file_internal_service_routing_proto_routing_proto_rawDesc = "" +
@@ -1089,10 +1149,16 @@ const file_internal_service_routing_proto_routing_proto_rawDesc = "" +
 	"\vgraph_edges\x18\x03 \x01(\x05R\n" +
 	"graphEdges\x12(\n" +
 	"\x10trip_graph_edges\x18\x04 \x01(\x05R\x0etripGraphEdges\x12!\n" +
-	"\ftrips_loaded\x18\x05 \x01(\x05R\vtripsLoaded2\x8b\x01\n" +
+	"\ftrips_loaded\x18\x05 \x01(\x05R\vtripsLoaded\"q\n" +
+	"\x16AdminOperationResponse\x12\x16\n" +
+	"\x06status\x18\x01 \x01(\tR\x06status\x12\x18\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\x12%\n" +
+	"\x0etrips_reloaded\x18\x03 \x01(\x05R\rtripsReloaded2\x94\x02\n" +
 	"\x0eRoutingService\x12A\n" +
 	"\fFindJourneys\x12\x17.routing.JourneyRequest\x1a\x18.routing.JourneyResponse\x126\n" +
-	"\vHealthCheck\x12\x0e.routing.Empty\x1a\x17.routing.HealthResponseBKZIgithub.com/Marwan051/final_project_backend/internal/service/routing/protob\x06proto3"
+	"\vHealthCheck\x12\x0e.routing.Empty\x1a\x17.routing.HealthResponse\x12D\n" +
+	"\x11ReloadPrefixTimes\x12\x0e.routing.Empty\x1a\x1f.routing.AdminOperationResponse\x12A\n" +
+	"\x0eRebuildNetwork\x12\x0e.routing.Empty\x1a\x1f.routing.AdminOperationResponseBKZIgithub.com/Marwan051/final_project_backend/internal/service/routing/protob\x06proto3"
 
 var (
 	file_internal_service_routing_proto_routing_proto_rawDescOnce sync.Once
@@ -1106,38 +1172,43 @@ func file_internal_service_routing_proto_routing_proto_rawDescGZIP() []byte {
 	return file_internal_service_routing_proto_routing_proto_rawDescData
 }
 
-var file_internal_service_routing_proto_routing_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
+var file_internal_service_routing_proto_routing_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
 var file_internal_service_routing_proto_routing_proto_goTypes = []any{
-	(*Empty)(nil),           // 0: routing.Empty
-	(*FilterBlock)(nil),     // 1: routing.FilterBlock
-	(*Filters)(nil),         // 2: routing.Filters
-	(*JourneyRequest)(nil),  // 3: routing.JourneyRequest
-	(*StopInfo)(nil),        // 4: routing.StopInfo
-	(*Leg)(nil),             // 5: routing.Leg
-	(*JourneySummary)(nil),  // 6: routing.JourneySummary
-	(*Journey)(nil),         // 7: routing.Journey
-	(*JourneyResponse)(nil), // 8: routing.JourneyResponse
-	(*HealthResponse)(nil),  // 9: routing.HealthResponse
-	nil,                     // 10: routing.JourneyRequest.WeightsEntry
-	nil,                     // 11: routing.JourneyResponse.WeightsUsedEntry
+	(*Empty)(nil),                  // 0: routing.Empty
+	(*FilterBlock)(nil),            // 1: routing.FilterBlock
+	(*Filters)(nil),                // 2: routing.Filters
+	(*JourneyRequest)(nil),         // 3: routing.JourneyRequest
+	(*StopInfo)(nil),               // 4: routing.StopInfo
+	(*Leg)(nil),                    // 5: routing.Leg
+	(*JourneySummary)(nil),         // 6: routing.JourneySummary
+	(*Journey)(nil),                // 7: routing.Journey
+	(*JourneyResponse)(nil),        // 8: routing.JourneyResponse
+	(*HealthResponse)(nil),         // 9: routing.HealthResponse
+	(*AdminOperationResponse)(nil), // 10: routing.AdminOperationResponse
+	nil,                            // 11: routing.JourneyRequest.WeightsEntry
+	nil,                            // 12: routing.JourneyResponse.WeightsUsedEntry
 }
 var file_internal_service_routing_proto_routing_proto_depIdxs = []int32{
 	1,  // 0: routing.Filters.modes:type_name -> routing.FilterBlock
 	1,  // 1: routing.Filters.main_streets:type_name -> routing.FilterBlock
 	2,  // 2: routing.JourneyRequest.filters:type_name -> routing.Filters
-	10, // 3: routing.JourneyRequest.weights:type_name -> routing.JourneyRequest.WeightsEntry
+	11, // 3: routing.JourneyRequest.weights:type_name -> routing.JourneyRequest.WeightsEntry
 	4,  // 4: routing.Leg.from_stop:type_name -> routing.StopInfo
 	4,  // 5: routing.Leg.to_stop:type_name -> routing.StopInfo
 	6,  // 6: routing.Journey.summary:type_name -> routing.JourneySummary
 	5,  // 7: routing.Journey.legs:type_name -> routing.Leg
-	11, // 8: routing.JourneyResponse.weights_used:type_name -> routing.JourneyResponse.WeightsUsedEntry
+	12, // 8: routing.JourneyResponse.weights_used:type_name -> routing.JourneyResponse.WeightsUsedEntry
 	7,  // 9: routing.JourneyResponse.journeys:type_name -> routing.Journey
 	3,  // 10: routing.RoutingService.FindJourneys:input_type -> routing.JourneyRequest
 	0,  // 11: routing.RoutingService.HealthCheck:input_type -> routing.Empty
-	8,  // 12: routing.RoutingService.FindJourneys:output_type -> routing.JourneyResponse
-	9,  // 13: routing.RoutingService.HealthCheck:output_type -> routing.HealthResponse
-	12, // [12:14] is the sub-list for method output_type
-	10, // [10:12] is the sub-list for method input_type
+	0,  // 12: routing.RoutingService.ReloadPrefixTimes:input_type -> routing.Empty
+	0,  // 13: routing.RoutingService.RebuildNetwork:input_type -> routing.Empty
+	8,  // 14: routing.RoutingService.FindJourneys:output_type -> routing.JourneyResponse
+	9,  // 15: routing.RoutingService.HealthCheck:output_type -> routing.HealthResponse
+	10, // 16: routing.RoutingService.ReloadPrefixTimes:output_type -> routing.AdminOperationResponse
+	10, // 17: routing.RoutingService.RebuildNetwork:output_type -> routing.AdminOperationResponse
+	14, // [14:18] is the sub-list for method output_type
+	10, // [10:14] is the sub-list for method input_type
 	10, // [10:10] is the sub-list for extension type_name
 	10, // [10:10] is the sub-list for extension extendee
 	0,  // [0:10] is the sub-list for field type_name
@@ -1154,7 +1225,7 @@ func file_internal_service_routing_proto_routing_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_internal_service_routing_proto_routing_proto_rawDesc), len(file_internal_service_routing_proto_routing_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   12,
+			NumMessages:   13,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

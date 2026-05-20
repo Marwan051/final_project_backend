@@ -9,6 +9,7 @@ import (
 	"time"
 
 	authpkg "github.com/Marwan051/final_project_backend/internal/auth"
+	authctx "github.com/Marwan051/final_project_backend/internal/authctx"
 	"github.com/Marwan051/final_project_backend/internal/utils"
 )
 
@@ -76,22 +77,13 @@ func Headers(next http.Handler) http.Handler {
 	})
 }
 
-// Context keys for storing user info
-type contextKey string
-
-const (
-	ctxKeyUserUID    contextKey = "userUID"
-	ctxKeyUserClaims contextKey = "userClaims"
-	ctxKeyAuthToken  contextKey = "authToken"
-)
-
 // Auth returns a middleware that validates Supabase access tokens using the provided Verifier.
 func Auth(verifier authpkg.Verifier) Middleware {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			if utils.Cfg.ENV == "dev" && utils.Cfg.DisableAuth {
 				// Inject a mock dev user to prevent downstream panics
-				ctx := context.WithValue(r.Context(), ctxKeyUserUID, "dev-user-mock-uid")
+				ctx := authctx.SetUserUID(r.Context(), "dev-user-mock-uid")
 				next.ServeHTTP(w, r.WithContext(ctx))
 				return
 			}
@@ -115,9 +107,9 @@ func Auth(verifier authpkg.Verifier) Middleware {
 				return
 			}
 
-			ctx := context.WithValue(r.Context(), ctxKeyUserUID, vt.UID)
-			ctx = context.WithValue(ctx, ctxKeyUserClaims, vt.Claims)
-			ctx = context.WithValue(ctx, ctxKeyAuthToken, token)
+			ctx := authctx.SetUserUID(r.Context(), vt.UID)
+			ctx = authctx.SetUserClaims(ctx, vt.Claims)
+			ctx = authctx.SetAuthToken(ctx, token)
 			next.ServeHTTP(w, r.WithContext(ctx))
 		})
 	}
@@ -125,23 +117,17 @@ func Auth(verifier authpkg.Verifier) Middleware {
 
 // GetUserUID extracts the authenticated user ID from context.
 func GetUserUID(ctx context.Context) (string, bool) {
-	v := ctx.Value(ctxKeyUserUID)
-	s, ok := v.(string)
-	return s, ok
+	return authctx.GetUserUID(ctx)
 }
 
 // GetUserClaims extracts the verified claims from context.
 func GetUserClaims(ctx context.Context) (map[string]interface{}, bool) {
-	v := ctx.Value(ctxKeyUserClaims)
-	m, ok := v.(map[string]any)
-	return m, ok
+	return authctx.GetUserClaims(ctx)
 }
 
 // GetAuthToken extracts the verified bearer token from context.
 func GetAuthToken(ctx context.Context) (string, bool) {
-	v := ctx.Value(ctxKeyAuthToken)
-	s, ok := v.(string)
-	return s, ok
+	return authctx.GetAuthToken(ctx)
 }
 
 func claimBool(claims map[string]any, key string) (bool, bool) {
@@ -182,6 +168,16 @@ func metadataBool(claims map[string]any, container, key string) (bool, bool) {
 	return claimBool(group, key)
 }
 
+func hasRole(claims map[string]any, role string) bool {
+	if claimRole, ok := claims["role"].(string); ok && claimRole == role {
+		return true
+	}
+	if metadataRole, ok := metadataString(claims, "app_metadata", "role"); ok && metadataRole == role {
+		return true
+	}
+	return false
+}
+
 // RequirePremium enforces that the user has a premium flag or premium role in Supabase metadata.
 func RequirePremium(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -203,6 +199,30 @@ func RequirePremium(next http.Handler) http.Handler {
 			return
 		}
 		if role, ok := claims["role"].(string); ok && role == "premium" {
+			next.ServeHTTP(w, r)
+			return
+		}
+		http.Error(w, "forbidden", http.StatusForbidden)
+	})
+}
+
+// RequireAdmin enforces that the user has an admin role or admin flag in Supabase metadata.
+func RequireAdmin(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		claims, ok := GetUserClaims(r.Context())
+		if !ok {
+			http.Error(w, "forbidden", http.StatusForbidden)
+			return
+		}
+		if hasRole(claims, "admin") {
+			next.ServeHTTP(w, r)
+			return
+		}
+		if admin, ok := claimBool(claims, "admin"); ok && admin {
+			next.ServeHTTP(w, r)
+			return
+		}
+		if admin, ok := metadataBool(claims, "app_metadata", "admin"); ok && admin {
 			next.ServeHTTP(w, r)
 			return
 		}

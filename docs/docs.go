@@ -40,7 +40,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_agent.Request"
+                            "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_agent.AgentRequest"
                         }
                     }
                 ],
@@ -48,7 +48,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_agent.Response"
+                            "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_agent.AgentResponse"
                         }
                     },
                     "400": {
@@ -229,6 +229,80 @@ const docTemplate = `{
                             "additionalProperties": {
                                 "type": "string"
                             }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/routing/rebuild-network": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Admin only. Rebuilds the routing network from source data.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "routing"
+                ],
+                "summary": "Rebuild Routing Network",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.AdminOperationResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/routing/reload-prefix-times": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Admin only. Reloads prefix times for the routing graph.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "routing"
+                ],
+                "summary": "Reload Prefix Times",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.AdminOperationResponse"
                         }
                     },
                     "500": {
@@ -507,21 +581,21 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "github_com_Marwan051_final_project_backend_internal_service_agent.Request": {
+        "github_com_Marwan051_final_project_backend_internal_service_agent.AgentRequest": {
             "type": "object",
             "properties": {
-                "message": {
+                "session_id": {
                     "type": "string"
                 },
-                "session_id": {
+                "user_query": {
                     "type": "string"
                 }
             }
         },
-        "github_com_Marwan051_final_project_backend_internal_service_agent.Response": {
+        "github_com_Marwan051_final_project_backend_internal_service_agent.AgentResponse": {
             "type": "object",
             "properties": {
-                "message": {
+                "answer": {
                     "type": "string"
                 },
                 "session_id": {
@@ -692,6 +766,20 @@ const docTemplate = `{
                 },
                 "longitude": {
                     "type": "number"
+                }
+            }
+        },
+        "github_com_Marwan051_final_project_backend_internal_service_routing.AdminOperationResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "trips_reloaded": {
+                    "type": "integer"
                 }
             }
         },
@@ -1192,7 +1280,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "localhost:8080",
+	Host:             "",
 	BasePath:         "/",
 	Schemes:          []string{},
 	Title:            "Routing App Backend API",

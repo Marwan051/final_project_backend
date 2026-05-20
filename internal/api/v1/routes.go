@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/Marwan051/final_project_backend/internal/api/v1/handlers"
+	authctx "github.com/Marwan051/final_project_backend/internal/authctx"
 	agent_service "github.com/Marwan051/final_project_backend/internal/service/agent"
 	"github.com/Marwan051/final_project_backend/internal/service/db_tools"
 	"github.com/Marwan051/final_project_backend/internal/service/geocoding"
@@ -33,6 +34,8 @@ func NewRouter(
 
 	// Routing endpoint
 	mux.HandleFunc("POST /route", routingHandler.FindRoute)
+	mux.Handle("POST /routing/reload-prefix-times", requireAdmin(http.HandlerFunc(routingHandler.ReloadPrefixTimes)))
+	mux.Handle("POST /routing/rebuild-network", requireAdmin(http.HandlerFunc(routingHandler.RebuildNetwork)))
 
 	// Agent endpoint
 	mux.HandleFunc("POST /agent/query", agentHandler.Query)
@@ -73,4 +76,37 @@ func HealthHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	utils.WriteJSONResponse(w, http.StatusOK, response)
+}
+
+func requireAdmin(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if utils.Cfg.ENV == "dev" && utils.Cfg.DisableAuth {
+			http.Error(w, "forbidden", http.StatusForbidden)
+			return
+		}
+		claims, ok := authctx.GetUserClaims(r.Context())
+		if !ok {
+			http.Error(w, "forbidden", http.StatusForbidden)
+			return
+		}
+		if role, ok := claims["role"].(string); ok && role == "admin" {
+			next.ServeHTTP(w, r)
+			return
+		}
+		if role, ok := claims["app_metadata"].(map[string]any); ok {
+			if v, ok := role["role"].(string); ok && v == "admin" {
+				next.ServeHTTP(w, r)
+				return
+			}
+			if v, ok := role["admin"].(bool); ok && v {
+				next.ServeHTTP(w, r)
+				return
+			}
+		}
+		if admin, ok := claims["admin"].(bool); ok && admin {
+			next.ServeHTTP(w, r)
+			return
+		}
+		http.Error(w, "forbidden", http.StatusForbidden)
+	})
 }

@@ -8,6 +8,7 @@ package proto
 
 import (
 	context "context"
+
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -19,8 +20,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	RoutingService_FindJourneys_FullMethodName = "/routing.RoutingService/FindJourneys"
-	RoutingService_HealthCheck_FullMethodName  = "/routing.RoutingService/HealthCheck"
+	RoutingService_FindJourneys_FullMethodName      = "/routing.RoutingService/FindJourneys"
+	RoutingService_HealthCheck_FullMethodName       = "/routing.RoutingService/HealthCheck"
+	RoutingService_ReloadPrefixTimes_FullMethodName = "/routing.RoutingService/ReloadPrefixTimes"
+	RoutingService_RebuildNetwork_FullMethodName    = "/routing.RoutingService/RebuildNetwork"
 )
 
 // RoutingServiceClient is the client API for RoutingService service.
@@ -29,6 +32,8 @@ const (
 type RoutingServiceClient interface {
 	FindJourneys(ctx context.Context, in *JourneyRequest, opts ...grpc.CallOption) (*JourneyResponse, error)
 	HealthCheck(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*HealthResponse, error)
+	ReloadPrefixTimes(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*AdminOperationResponse, error)
+	RebuildNetwork(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*AdminOperationResponse, error)
 }
 
 type routingServiceClient struct {
@@ -59,12 +64,34 @@ func (c *routingServiceClient) HealthCheck(ctx context.Context, in *Empty, opts 
 	return out, nil
 }
 
+func (c *routingServiceClient) ReloadPrefixTimes(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*AdminOperationResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AdminOperationResponse)
+	err := c.cc.Invoke(ctx, RoutingService_ReloadPrefixTimes_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *routingServiceClient) RebuildNetwork(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*AdminOperationResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AdminOperationResponse)
+	err := c.cc.Invoke(ctx, RoutingService_RebuildNetwork_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // RoutingServiceServer is the server API for RoutingService service.
 // All implementations must embed UnimplementedRoutingServiceServer
 // for forward compatibility.
 type RoutingServiceServer interface {
 	FindJourneys(context.Context, *JourneyRequest) (*JourneyResponse, error)
 	HealthCheck(context.Context, *Empty) (*HealthResponse, error)
+	ReloadPrefixTimes(context.Context, *Empty) (*AdminOperationResponse, error)
+	RebuildNetwork(context.Context, *Empty) (*AdminOperationResponse, error)
 	mustEmbedUnimplementedRoutingServiceServer()
 }
 
@@ -80,6 +107,12 @@ func (UnimplementedRoutingServiceServer) FindJourneys(context.Context, *JourneyR
 }
 func (UnimplementedRoutingServiceServer) HealthCheck(context.Context, *Empty) (*HealthResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method HealthCheck not implemented")
+}
+func (UnimplementedRoutingServiceServer) ReloadPrefixTimes(context.Context, *Empty) (*AdminOperationResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ReloadPrefixTimes not implemented")
+}
+func (UnimplementedRoutingServiceServer) RebuildNetwork(context.Context, *Empty) (*AdminOperationResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method RebuildNetwork not implemented")
 }
 func (UnimplementedRoutingServiceServer) mustEmbedUnimplementedRoutingServiceServer() {}
 func (UnimplementedRoutingServiceServer) testEmbeddedByValue()                        {}
@@ -138,6 +171,42 @@ func _RoutingService_HealthCheck_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RoutingService_ReloadPrefixTimes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RoutingServiceServer).ReloadPrefixTimes(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RoutingService_ReloadPrefixTimes_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RoutingServiceServer).ReloadPrefixTimes(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RoutingService_RebuildNetwork_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RoutingServiceServer).RebuildNetwork(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RoutingService_RebuildNetwork_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RoutingServiceServer).RebuildNetwork(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // RoutingService_ServiceDesc is the grpc.ServiceDesc for RoutingService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -152,6 +221,14 @@ var RoutingService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "HealthCheck",
 			Handler:    _RoutingService_HealthCheck_Handler,
+		},
+		{
+			MethodName: "ReloadPrefixTimes",
+			Handler:    _RoutingService_ReloadPrefixTimes_Handler,
+		},
+		{
+			MethodName: "RebuildNetwork",
+			Handler:    _RoutingService_RebuildNetwork_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

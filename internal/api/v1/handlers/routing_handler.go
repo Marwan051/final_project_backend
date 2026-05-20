@@ -58,3 +58,49 @@ func (h *RoutingHandler) FindRoute(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Error encoding response: %v", err)
 	}
 }
+
+// ReloadPrefixTimes reloads prefix times for routing data.
+// @Summary      Reload Prefix Times
+// @Description  Admin only. Reloads prefix times for the routing graph.
+// @Tags         routing
+// @Accept       json
+// @Produce      json
+// @Success      200  {object}  route_service.AdminOperationResponse
+// @Failure      500  {object}  map[string]string
+// @Security     ApiKeyAuth
+// @Router       /api/v1/routing/reload-prefix-times [post]
+func (h *RoutingHandler) ReloadPrefixTimes(w http.ResponseWriter, r *http.Request) {
+	resp, err := h.routerService.ReloadPrefixTimes(r.Context())
+	if err != nil {
+		log.Printf("Error reloading prefix times: %v", err)
+		utils.WriteJSONError(w, http.StatusInternalServerError, "Failed to reload prefix times")
+		return
+	}
+
+	if err := utils.WriteJSONResponse(w, http.StatusOK, resp); err != nil {
+		log.Printf("Error encoding response: %v", err)
+	}
+}
+
+// RebuildNetwork rebuilds the routing network.
+// @Summary      Rebuild Routing Network
+// @Description  Admin only. Rebuilds the routing network from source data.
+// @Tags         routing
+// @Accept       json
+// @Produce      json
+// @Success      200  {object}  route_service.AdminOperationResponse
+// @Failure      500  {object}  map[string]string
+// @Security     ApiKeyAuth
+// @Router       /api/v1/routing/rebuild-network [post]
+func (h *RoutingHandler) RebuildNetwork(w http.ResponseWriter, r *http.Request) {
+	resp, err := h.routerService.RebuildNetwork(r.Context())
+	if err != nil {
+		log.Printf("Error rebuilding network: %v", err)
+		utils.WriteJSONError(w, http.StatusInternalServerError, "Failed to rebuild network")
+		return
+	}
+
+	if err := utils.WriteJSONResponse(w, http.StatusOK, resp); err != nil {
+		log.Printf("Error encoding response: %v", err)
+	}
+}
