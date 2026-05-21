@@ -1,93 +1,151 @@
-# Backend Setup
+# final_project backend
 
-## Environment
+This repository contains the Go HTTP server that exposes routing, geocoding, agent, and traffic-related APIs used by the final_project system. The server is mounted under `/api/v1/` and uses Supabase access tokens for authentication.
 
-1. Copy `.env.example` to `.env`.
-2. Fill required values:
-   - `DB_URL`
-   - `PORT`
-   - `ENV`
-   - `ROUTING_SERVICE_ADDR`
-   - `GRPC_REQUEST_TIMEOUT` to override the default 10s gRPC deadline
-3. Configure Supabase auth:
-   - `SUPABASE_URL`
-   - `SUPABASE_SECRET_KEY` or `SUPABASE_SERVICE_ROLE_KEY`
-   - `SUPABASE_PUBLISHABLE_KEY` if you also use the same project from a browser/client app
+## Quick Start
 
-## Supabase Auth
-
-This backend verifies Supabase access tokens server-side using the Supabase project URL and a server key.
-
-Supabase's current guidance is to use the publishable key for client-side usage and the secret key for server-side usage. Legacy `anon` and `service_role` keys still work, but the new keys are preferred.
-
-Use the project URL and one of the server keys in your environment:
+- Copy the example environment file and fill values:
 
 ```bash
-SUPABASE_URL="https://your-project-id.supabase.co"
-SUPABASE_SECRET_KEY="sb_secret_..."
+cp .env.example .env
+# edit .env and set DB_URL, PORT, SUPABASE_*, ROUTING_SERVICE_ADDR, etc.
 ```
 
-If your project still uses legacy keys, `SUPABASE_SERVICE_ROLE_KEY` can be used as a fallback.
-
-## Run
-
-Run with hot reload:
+- Run locally (recommended for development):
 
 ```bash
-air
+# requires `air` for hot reload (optional)
+
 ```
 
-## API Routes
-
-`GET /health` is public. Everything under `/api/v1/*` requires a valid Supabase access token, and the two routing maintenance endpoints below also require an admin claim.
-
-| Method | Path                                  | Purpose                                                          | Access        |
-| ------ | ------------------------------------- | ---------------------------------------------------------------- | ------------- |
-| `GET`  | `/health`                             | Returns the service health status and current timestamp.         | Public        |
-| `POST` | `/api/v1/route`                       | Calculates the best route between two coordinate pairs.          | Authenticated |
-| `POST` | `/api/v1/agent/query`                 | Sends a message to the agent and returns its reply.              | Authenticated |
-| `POST` | `/api/v1/geocode`                     | Converts a text address into latitude and longitude coordinates. | Authenticated |
-| `POST` | `/api/v1/nearby-trips`                | Finds trips near a point within a radius.                        | Authenticated |
-| `POST` | `/api/v1/traffic/trigger`             | Starts a traffic update job manually.                            | Authenticated |
-| `GET`  | `/api/v1/traffic/status`              | Returns the current traffic update status.                       | Authenticated |
-| `POST` | `/api/v1/traffic/update-trip`         | Submits a trip to affect traffic modelling.                      | Authenticated |
-| `POST` | `/api/v1/traffic/street`              | Returns the calculated traffic load for one street.              | Authenticated |
-| `GET`  | `/api/v1/traffic/streets`             | Lists all tracked streets and their traffic levels.              | Authenticated |
-| `POST` | `/api/v1/routing/reload-prefix-times` | Reloads prefix times for the routing graph.                      | Admin only    |
-| `POST` | `/api/v1/routing/rebuild-network`     | Rebuilds the routing network from source data.                   | Admin only    |
-
-## Test Supabase Auth End To End
-
-All `/api/v1/*` endpoints require auth, while `/health` is a quick unauthenticated liveness check.
-
-1. Make sure password sign-in is enabled in your Supabase project.
-2. Get your project URL and publishable key from the Supabase dashboard.
-3. Mint an access token with the Supabase Auth password grant:
+- Run with Docker:
 
 ```bash
-curl -sS -X POST "${SUPABASE_URL}/auth/v1/token?grant_type=password" \
-   -H "apikey: ${SUPABASE_PUBLISHABLE_KEY}" \
-   -H "Authorization: Bearer ${SUPABASE_PUBLISHABLE_KEY}" \
-   -H "Content-Type: application/json" \
-   --data-binary '{"email":"<EMAIL>","password":"<PASSWORD>"}'
+docker build -t final-project-backend-server:latest .
+docker run -p 3000:3000 --env-file .env final-project-backend-server:latest
 ```
 
-4. Copy the `access_token` from the response and call one of the protected endpoints:
+## Environment Variables
+
+At minimum set these in your `.env` or environment:
+
+- `DB_URL` — Postgres connection string
+- `PORT` — Port the HTTP server listens on (default 3000)
+- `ENV` — `dev` or `prod`
+- `ROUTING_SERVICE_ADDR` — address of the routing gRPC service
+- `GRPC_REQUEST_TIMEOUT` — gRPC deadline (e.g. `10s`)
+- Supabase related:
+  - `SUPABASE_URL`
+  - `SUPABASE_SECRET_KEY` or `SUPABASE_SERVICE_ROLE_KEY`
+  - `SUPABASE_PUBLISHABLE_KEY` (used in client flows)
+
+See `internal/utils/load_env.go` for full loading behavior and defaults.
+
+## Authentication
+
+- `/health` is public.
+- All endpoints under `/api/v1/` require a valid Supabase `Authorization: Bearer <token>` header unless `ENV=dev` and `DISABLE_AUTH=true` are set (see `internal/utils/load_env.go`).
+- Some maintenance endpoints require an admin claim and are protected by `requireAdmin`.
+
+## API Reference (v1)
+
+Base URL (local): `http://localhost:3000/api/v1/`
+
+Common headers:
+
+- `Authorization: Bearer <access_token>` — required for protected endpoints
+- `Content-Type: application/json` — for JSON POST bodies
+
+Endpoints (high level):
+
+- `GET /health` — Health check (public)
+
+- Routing:
+  - `POST /api/v1/route` — Calculate best route between points.
+  - `POST /api/v1/routing/reload-prefix-times` — Reload prefix times (admin only).
+  - `POST /api/v1/routing/rebuild-network` — Rebuild routing network (admin only).
+
+- Agent:
+  - `POST /api/v1/agent/query` — Send a message to the agent service and return a reply.
+
+- Geocoding:
+  - `POST /api/v1/geocode` — Convert an address string into lat/lon coordinates.
+
+- DB tools:
+  - `POST /api/v1/nearby-trips` — Query trips near a point within a radius.
+
+- Traffic:
+  - `POST /api/v1/traffic/trigger` — Trigger a traffic update job.
+  - `GET /api/v1/traffic/status` — Get current traffic update status.
+  - `POST /api/v1/traffic/update-trip` — Submit a trip for traffic modelling.
+  - `POST /api/v1/traffic/street` — Compute traffic load for a particular street.
+  - `GET /api/v1/traffic/streets` — List tracked streets and traffic levels.
+
+Note: The server mounts the v1 router under `/api/v1/` (see [internal/server/server.go](internal/server/server.go)).
+
+### Example Requests
+
+- Health check (public):
+
+```bash
+curl -i http://localhost:3000/health
+```
+
+- Route calculation (example payload):
 
 ```bash
 TOKEN="<ACCESS_TOKEN>"
-curl -i -H "Authorization: Bearer ${TOKEN}" http://localhost:3000/api/v1/route
+curl -sS -X POST http://localhost:3000/api/v1/route \
+   -H "Authorization: Bearer ${TOKEN}" \
+   -H "Content-Type: application/json" \
+   --data-raw '{"from":{"lat":40.7128,"lon":-74.0060},"to":{"lat":40.73061,"lon":-73.935242}}'
 ```
 
-Expected results for a protected route such as `/api/v1/route`:
-
-- Missing token: `401 Unauthorized`
-- Invalid token: `401 Unauthorized`
-- Valid token: `200 OK` with JSON body
-
-Quick negative checks:
+- Agent query:
 
 ```bash
-curl -i http://localhost:3000/api/v1/route
-curl -i -H "Authorization: Bearer not-a-real-token" http://localhost:3000/api/v1/route
+curl -sS -X POST http://localhost:3000/api/v1/agent/query \
+   -H "Authorization: Bearer ${TOKEN}" \
+   -H "Content-Type: application/json" \
+   --data-raw '{"message":"Find me the fastest route to the airport"}'
 ```
+
+- Geocode example:
+
+```bash
+curl -sS -X POST http://localhost:3000/api/v1/geocode \
+   -H "Authorization: Bearer ${TOKEN}" \
+   -H "Content-Type: application/json" \
+   --data-raw '{"address":"1600 Amphitheatre Parkway, Mountain View, CA"}'
+```
+
+- Traffic status (read-only):
+
+```bash
+curl -H "Authorization: Bearer ${TOKEN}" http://localhost:3000/api/v1/traffic/status
+```
+
+### Admin endpoints
+
+Requires an admin claim in the user token. Use these carefully — they affect the routing graph and background jobs.
+
+- `POST /api/v1/routing/reload-prefix-times`
+- `POST /api/v1/routing/rebuild-network`
+
+## Swagger / API docs
+
+In development (`ENV=dev`) the server serves a Swagger UI at `/docs/` (see `internal/server/server.go`).
+
+## Testing & Development tips
+
+- To exercise authenticated endpoints locally, obtain a Supabase access token (password grant) and set `Authorization: Bearer <token>`.
+- If you need to disable auth for local dev, set `ENV=dev` and `DISABLE_AUTH=true` (see `internal/utils/load_env.go`).
+
+## Contributing
+
+- Run `go vet` and `go test ./...` before opening a PR.
+- Update this README if you add new endpoints or change existing request/response shapes.
+
+---
+
+For implementation details, check handlers in [internal/api/v1/handlers](internal/api/v1/handlers) and route wiring in [internal/api/v1/routes.go](internal/api/v1/routes.go).

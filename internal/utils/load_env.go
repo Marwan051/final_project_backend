@@ -9,7 +9,6 @@ import (
 )
 
 type Config struct {
-	DBUrl                  string        `env:"DB_URL,required"`
 	Port                   string        `env:"PORT,required"`
 	ENV                    string        `env:"ENV,required"`
 	GRPCRequestTimeout     time.Duration `env:"GRPC_REQUEST_TIMEOUT" envDefault:"10s"`
