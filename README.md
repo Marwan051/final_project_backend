@@ -269,6 +269,38 @@ curl -sS -X POST http://localhost:3000/api/v1/agent/query \
 }
 ```
 
+**Session Management:**
+
+- **If no `session_id` is provided:** The server automatically creates a new session and returns a unique `session_id` in the response.
+- **To continue a previous conversation:** Include the `session_id` from the previous response in your next request. This allows the agent to maintain context across multiple queries.
+
+**Example: Continue a conversation**
+
+First request (no session ID):
+
+```bash
+curl -sS -X POST http://localhost:3000/api/v1/agent/query \
+  -H "Authorization: Bearer ${TOKEN}" \
+  -H "Content-Type: application/json" \
+  --data-raw '{"user_query": "Show me routes from downtown to the airport"}'
+```
+
+Response includes `session_id`: `"sess_abc123"`
+
+Follow-up request (with session ID to continue):
+
+```bash
+curl -sS -X POST http://localhost:3000/api/v1/agent/query \
+  -H "Authorization: Bearer ${TOKEN}" \
+  -H "Content-Type: application/json" \
+  --data-raw '{
+    "user_query": "What about the cheapest option?",
+    "session_id": "sess_abc123"
+  }'
+```
+
+The agent will use the context from your first query when answering the follow-up.
+
 **Error responses:**
 
 - `400 Bad Request` — Missing or empty `user_query`
