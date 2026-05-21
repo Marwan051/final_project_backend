@@ -18,13 +18,20 @@ const docTemplate = `{
         "/api/v1/agent/query": {
             "post": {
                 "security": [
-                    {"ApiKeyAuth": []},
-                    {"SupabaseOAuth": ["openid", "email"]}
+                    {
+                        "ApiKeyAuth": []
+                    }
                 ],
                 "description": "Sends a message to the agent and returns the reply plus session id",
-                "consumes": ["application/json"],
-                "produces": ["application/json"],
-                "tags": ["agent"],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "agent"
+                ],
                 "summary": "Agent Query",
                 "parameters": [
                     {
@@ -32,26 +39,56 @@ const docTemplate = `{
                         "name": "request",
                         "in": "body",
                         "required": true,
-                        "schema": {"$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_agent.AgentRequest"}
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_agent.AgentRequest"
+                        }
                     }
                 ],
                 "responses": {
-                    "200": {"description": "OK", "schema": {"$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_agent.AgentResponse"}},
-                    "400": {"description": "Bad Request", "schema": {"type": "object", "additionalProperties": {"type": "string"}}},
-                    "500": {"description": "Internal Server Error", "schema": {"type": "object", "additionalProperties": {"type": "string"}}}
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_agent.AgentResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
                 }
             }
         },
         "/api/v1/geocode": {
             "post": {
                 "security": [
-                    {"ApiKeyAuth": []},
-                    {"SupabaseOAuth": ["openid", "email"]}
+                    {
+                        "ApiKeyAuth": []
+                    }
                 ],
                 "description": "Converts a text address into latitude and longitude coordinates",
-                "consumes": ["application/json"],
-                "produces": ["application/json"],
-                "tags": ["geocoding"],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "geocoding"
+                ],
                 "summary": "Geocode Address",
                 "parameters": [
                     {
@@ -59,26 +96,56 @@ const docTemplate = `{
                         "name": "request",
                         "in": "body",
                         "required": true,
-                        "schema": {"$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_geocoding_proto.GeocodeRequest"}
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_geocoding_proto.GeocodeRequest"
+                        }
                     }
                 ],
                 "responses": {
-                    "200": {"description": "OK", "schema": {"$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_geocoding_proto.GeocodeResponse"}},
-                    "400": {"description": "Bad Request", "schema": {"type": "object", "additionalProperties": {"type": "string"}}},
-                    "500": {"description": "Internal Server Error", "schema": {"type": "object", "additionalProperties": {"type": "string"}}}
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_geocoding_proto.GeocodeResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
                 }
             }
         },
         "/api/v1/nearby-trips": {
             "post": {
                 "security": [
-                    {"ApiKeyAuth": []},
-                    {"SupabaseOAuth": ["openid", "email"]}
+                    {
+                        "ApiKeyAuth": []
+                    }
                 ],
                 "description": "Finds trips near a given location within a specified radius",
-                "consumes": ["application/json"],
-                "produces": ["application/json"],
-                "tags": ["db_tools"],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "db_tools"
+                ],
                 "summary": "Get Nearby Trips",
                 "parameters": [
                     {
@@ -86,26 +153,56 @@ const docTemplate = `{
                         "name": "request",
                         "in": "body",
                         "required": true,
-                        "schema": {"$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_db_tools_proto.NearbyTripsRequest"}
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_db_tools_proto.NearbyTripsRequest"
+                        }
                     }
                 ],
                 "responses": {
-                    "200": {"description": "OK", "schema": {"$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_db_tools_proto.NearbyTripsResponse"}},
-                    "400": {"description": "Bad Request", "schema": {"type": "object", "additionalProperties": {"type": "string"}}},
-                    "500": {"description": "Internal Server Error", "schema": {"type": "object", "additionalProperties": {"type": "string"}}}
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_db_tools_proto.NearbyTripsResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
                 }
             }
         },
         "/api/v1/route": {
             "post": {
                 "security": [
-                    {"ApiKeyAuth": []},
-                    {"SupabaseOAuth": ["openid", "email"]}
+                    {
+                        "ApiKeyAuth": []
+                    }
                 ],
                 "description": "Calculates the best route from start coordinates to end coordinates",
-                "consumes": ["application/json"],
-                "produces": ["application/json"],
-                "tags": ["routing"],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "routing"
+                ],
                 "summary": "Find Route",
                 "parameters": [
                     {
@@ -113,76 +210,164 @@ const docTemplate = `{
                         "name": "request",
                         "in": "body",
                         "required": true,
-                        "schema": {"$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.RouteRequest"}
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.RouteRequest"
+                        }
                     }
                 ],
                 "responses": {
-                    "200": {"description": "OK", "schema": {"$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.RouteResponse"}},
-                    "400": {"description": "Bad Request", "schema": {"type": "object", "additionalProperties": {"type": "string"}}},
-                    "500": {"description": "Internal Server Error", "schema": {"type": "object", "additionalProperties": {"type": "string"}}}
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.RouteResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
                 }
             }
         },
         "/api/v1/routing/rebuild-network": {
             "post": {
                 "security": [
-                    {"ApiKeyAuth": []},
-                    {"SupabaseOAuth": ["openid", "email"]}
+                    {
+                        "ApiKeyAuth": []
+                    }
                 ],
                 "description": "Admin only. Rebuilds the routing network from source data.",
-                "consumes": ["application/json"],
-                "produces": ["application/json"],
-                "tags": ["routing"],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "routing"
+                ],
                 "summary": "Rebuild Routing Network",
                 "responses": {
-                    "200": {"description": "OK", "schema": {"$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.AdminOperationResponse"}},
-                    "500": {"description": "Internal Server Error", "schema": {"type": "object", "additionalProperties": {"type": "string"}}}
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.AdminOperationResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
                 }
             }
         },
         "/api/v1/routing/reload-prefix-times": {
             "post": {
                 "security": [
-                    {"ApiKeyAuth": []},
-                    {"SupabaseOAuth": ["openid", "email"]}
+                    {
+                        "ApiKeyAuth": []
+                    }
                 ],
                 "description": "Admin only. Reloads prefix times for the routing graph.",
-                "consumes": ["application/json"],
-                "produces": ["application/json"],
-                "tags": ["routing"],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "routing"
+                ],
                 "summary": "Reload Prefix Times",
                 "responses": {
-                    "200": {"description": "OK", "schema": {"$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.AdminOperationResponse"}},
-                    "500": {"description": "Internal Server Error", "schema": {"type": "object", "additionalProperties": {"type": "string"}}}
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.AdminOperationResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
                 }
             }
         },
         "/api/v1/traffic/status": {
             "get": {
                 "security": [
-                    {"ApiKeyAuth": []},
-                    {"SupabaseOAuth": ["openid", "email"]}
+                    {
+                        "ApiKeyAuth": []
+                    }
                 ],
                 "description": "Retrieves the current traffic update status",
-                "produces": ["application/json"],
-                "tags": ["traffic"],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "traffic"
+                ],
                 "summary": "Get Traffic Status",
                 "responses": {
-                    "200": {"description": "OK", "schema": {"$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.StatusResponse"}},
-                    "500": {"description": "Internal Server Error", "schema": {"type": "object", "additionalProperties": {"type": "string"}}}
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.StatusResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
                 }
             }
         },
         "/api/v1/traffic/street": {
             "post": {
                 "security": [
-                    {"ApiKeyAuth": []},
-                    {"SupabaseOAuth": ["openid", "email"]}
+                    {
+                        "ApiKeyAuth": []
+                    }
                 ],
                 "description": "Fetches the current calculated traffic load on a specific street",
-                "consumes": ["application/json"],
-                "produces": ["application/json"],
-                "tags": ["traffic"],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "traffic"
+                ],
                 "summary": "Get Street Traffic",
                 "parameters": [
                     {
@@ -190,42 +375,90 @@ const docTemplate = `{
                         "name": "request",
                         "in": "body",
                         "required": true,
-                        "schema": {"$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.StreetTrafficRequest"}
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.StreetTrafficRequest"
+                        }
                     }
                 ],
                 "responses": {
-                    "200": {"description": "OK", "schema": {"$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.StreetTrafficResponse"}},
-                    "400": {"description": "Bad Request", "schema": {"type": "object", "additionalProperties": {"type": "string"}}},
-                    "500": {"description": "Internal Server Error", "schema": {"type": "object", "additionalProperties": {"type": "string"}}}
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.StreetTrafficResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
                 }
             }
         },
         "/api/v1/traffic/streets": {
             "get": {
                 "security": [
-                    {"ApiKeyAuth": []},
-                    {"SupabaseOAuth": ["openid", "email"]}
+                    {
+                        "ApiKeyAuth": []
+                    }
                 ],
                 "description": "Returns a list of all streets actively tracked and their traffic levels",
-                "produces": ["application/json"],
-                "tags": ["traffic"],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "traffic"
+                ],
                 "summary": "List All Streets Traffic",
                 "responses": {
-                    "200": {"description": "OK", "schema": {"$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.StreetListResponse"}},
-                    "500": {"description": "Internal Server Error", "schema": {"type": "object", "additionalProperties": {"type": "string"}}}
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.StreetListResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
                 }
             }
         },
         "/api/v1/traffic/trigger": {
             "post": {
                 "security": [
-                    {"ApiKeyAuth": []},
-                    {"SupabaseOAuth": ["openid", "email"]}
+                    {
+                        "ApiKeyAuth": []
+                    }
                 ],
                 "description": "Triggers a background traffic update process",
-                "consumes": ["application/json"],
-                "produces": ["application/json"],
-                "tags": ["traffic"],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "traffic"
+                ],
                 "summary": "Trigger Traffic Update",
                 "parameters": [
                     {
@@ -233,26 +466,56 @@ const docTemplate = `{
                         "name": "request",
                         "in": "body",
                         "required": true,
-                        "schema": {"$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.TriggerRequest"}
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.TriggerRequest"
+                        }
                     }
                 ],
                 "responses": {
-                    "200": {"description": "OK", "schema": {"$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.UpdateResponse"}},
-                    "400": {"description": "Bad Request", "schema": {"type": "object", "additionalProperties": {"type": "string"}}},
-                    "500": {"description": "Internal Server Error", "schema": {"type": "object", "additionalProperties": {"type": "string"}}}
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.UpdateResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
                 }
             }
         },
         "/api/v1/traffic/update-trip": {
             "post": {
                 "security": [
-                    {"ApiKeyAuth": []},
-                    {"SupabaseOAuth": ["openid", "email"]}
+                    {
+                        "ApiKeyAuth": []
+                    }
                 ],
                 "description": "Submits trip information to affect current traffic modelling",
-                "consumes": ["application/json"],
-                "produces": ["application/json"],
-                "tags": ["traffic"],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "traffic"
+                ],
                 "summary": "Update Trip Traffic",
                 "parameters": [
                     {
@@ -260,25 +523,59 @@ const docTemplate = `{
                         "name": "request",
                         "in": "body",
                         "required": true,
-                        "schema": {"$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.UpdateTripRequest"}
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.UpdateTripRequest"
+                        }
                     }
                 ],
                 "responses": {
-                    "200": {"description": "OK", "schema": {"$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.UpdateResponse"}},
-                    "400": {"description": "Bad Request", "schema": {"type": "object", "additionalProperties": {"type": "string"}}},
-                    "500": {"description": "Internal Server Error", "schema": {"type": "object", "additionalProperties": {"type": "string"}}}
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.UpdateResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
                 }
             }
         },
         "/health": {
             "get": {
                 "description": "Returns the health status of the backend service",
-                "consumes": ["application/json"],
-                "produces": ["application/json"],
-                "tags": ["system"],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "system"
+                ],
                 "summary": "Health Check",
                 "responses": {
-                    "200": {"description": "OK", "schema": {"$ref": "#/definitions/internal_api_v1.HealthResponse"}}
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/internal_api_v1.HealthResponse"
+                        }
+                    }
                 }
             }
         }
@@ -287,329 +584,703 @@ const docTemplate = `{
         "github_com_Marwan051_final_project_backend_internal_service_agent.AgentRequest": {
             "type": "object",
             "properties": {
-                "session_id": {"type": "string"},
-                "user_query": {"type": "string"}
+                "session_id": {
+                    "type": "string"
+                },
+                "user_query": {
+                    "type": "string"
+                }
             }
         },
         "github_com_Marwan051_final_project_backend_internal_service_agent.AgentResponse": {
             "type": "object",
             "properties": {
-                "answer": {"type": "string"},
-                "session_id": {"type": "string"}
+                "answer": {
+                    "type": "string"
+                },
+                "session_id": {
+                    "type": "string"
+                }
             }
         },
         "github_com_Marwan051_final_project_backend_internal_service_db_tools_proto.NearbyTripResult": {
             "type": "object",
             "properties": {
-                "closest_stop_id": {"type": "string"},
-                "closest_stop_lat": {"type": "number"},
-                "closest_stop_lon": {"type": "number"},
-                "closest_stop_name": {"type": "string"},
-                "closest_stop_name_ar": {"type": "string"},
-                "closest_stop_sequence": {"type": "integer"},
-                "direction_id": {"type": "integer"},
-                "distance_m": {"type": "number"},
-                "route_id": {"type": "string"},
-                "route_name": {"type": "string"},
-                "route_name_ar": {"type": "string"},
-                "route_short_name": {"type": "string"},
-                "route_short_name_ar": {"type": "string"},
-                "trip_headsign": {"type": "string"},
-                "trip_headsign_ar": {"type": "string"},
-                "trip_id": {"type": "string"}
+                "closest_stop_id": {
+                    "type": "string"
+                },
+                "closest_stop_lat": {
+                    "type": "number"
+                },
+                "closest_stop_lon": {
+                    "type": "number"
+                },
+                "closest_stop_name": {
+                    "type": "string"
+                },
+                "closest_stop_name_ar": {
+                    "type": "string"
+                },
+                "closest_stop_sequence": {
+                    "type": "integer"
+                },
+                "direction_id": {
+                    "type": "integer"
+                },
+                "distance_m": {
+                    "type": "number"
+                },
+                "route_id": {
+                    "type": "string"
+                },
+                "route_name": {
+                    "type": "string"
+                },
+                "route_name_ar": {
+                    "type": "string"
+                },
+                "route_short_name": {
+                    "type": "string"
+                },
+                "route_short_name_ar": {
+                    "type": "string"
+                },
+                "trip_headsign": {
+                    "type": "string"
+                },
+                "trip_headsign_ar": {
+                    "type": "string"
+                },
+                "trip_id": {
+                    "type": "string"
+                }
             }
         },
         "github_com_Marwan051_final_project_backend_internal_service_db_tools_proto.NearbyTripsRequest": {
             "type": "object",
             "properties": {
-                "epsg": {"type": "integer"},
-                "lat": {"type": "number"},
-                "lon": {"type": "number"},
-                "radius_m": {"type": "number"},
-                "starts": {"type": "boolean"}
+                "epsg": {
+                    "type": "integer"
+                },
+                "lat": {
+                    "type": "number"
+                },
+                "lon": {
+                    "type": "number"
+                },
+                "radius_m": {
+                    "type": "number"
+                },
+                "starts": {
+                    "type": "boolean"
+                }
             }
         },
         "github_com_Marwan051_final_project_backend_internal_service_db_tools_proto.NearbyTripsResponse": {
             "type": "object",
             "properties": {
-                "count": {"type": "integer"},
-                "epsg": {"type": "integer"},
-                "lat": {"type": "number"},
-                "lon": {"type": "number"},
-                "radius_m": {"type": "number"},
-                "starts": {"type": "boolean"},
+                "count": {
+                    "type": "integer"
+                },
+                "epsg": {
+                    "type": "integer"
+                },
+                "lat": {
+                    "type": "number"
+                },
+                "lon": {
+                    "type": "number"
+                },
+                "radius_m": {
+                    "type": "number"
+                },
+                "starts": {
+                    "type": "boolean"
+                },
                 "trips": {
                     "type": "array",
-                    "items": {"$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_db_tools_proto.NearbyTripResult"}
+                    "items": {
+                        "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_db_tools_proto.NearbyTripResult"
+                    }
                 }
             }
         },
         "github_com_Marwan051_final_project_backend_internal_service_geocoding_proto.GeocodeRequest": {
             "type": "object",
             "properties": {
-                "address": {"type": "string"},
-                "bias": {"type": "boolean"},
-                "language": {"type": "string"},
-                "user_lat": {"description": "0 = not provided", "type": "number"},
-                "user_lng": {"type": "number"}
+                "address": {
+                    "type": "string"
+                },
+                "bias": {
+                    "type": "boolean"
+                },
+                "language": {
+                    "type": "string"
+                },
+                "user_lat": {
+                    "description": "0 = not provided",
+                    "type": "number"
+                },
+                "user_lng": {
+                    "type": "number"
+                }
             }
         },
         "github_com_Marwan051_final_project_backend_internal_service_geocoding_proto.GeocodeResponse": {
             "type": "object",
             "properties": {
-                "bias": {"type": "boolean"},
-                "count": {"type": "integer"},
-                "error": {"type": "string"},
-                "language": {"type": "string"},
-                "query": {"type": "string"},
+                "bias": {
+                    "type": "boolean"
+                },
+                "count": {
+                    "type": "integer"
+                },
+                "error": {
+                    "type": "string"
+                },
+                "language": {
+                    "type": "string"
+                },
+                "query": {
+                    "type": "string"
+                },
                 "results": {
                     "type": "array",
-                    "items": {"$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_geocoding_proto.GeocodeResult"}
+                    "items": {
+                        "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_geocoding_proto.GeocodeResult"
+                    }
                 },
-                "success": {"type": "boolean"}
+                "success": {
+                    "type": "boolean"
+                }
             }
         },
         "github_com_Marwan051_final_project_backend_internal_service_geocoding_proto.GeocodeResult": {
             "type": "object",
             "properties": {
-                "formatted_address": {"type": "string"},
-                "latitude": {"type": "number"},
-                "longitude": {"type": "number"}
+                "formatted_address": {
+                    "type": "string"
+                },
+                "latitude": {
+                    "type": "number"
+                },
+                "longitude": {
+                    "type": "number"
+                }
             }
         },
         "github_com_Marwan051_final_project_backend_internal_service_routing.AdminOperationResponse": {
             "type": "object",
             "properties": {
-                "message": {"type": "string"},
-                "status": {"type": "string"},
-                "trips_reloaded": {"type": "integer"}
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "trips_reloaded": {
+                    "type": "integer"
+                }
             }
         },
         "github_com_Marwan051_final_project_backend_internal_service_routing.FilterBlock": {
             "type": "object",
             "properties": {
-                "exclude": {"type": "array", "items": {"type": "string"}},
-                "include": {"type": "array", "items": {"type": "string"}},
-                "include_match": {"type": "string"}
+                "exclude": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "include": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "include_match": {
+                    "type": "string"
+                }
             }
         },
         "github_com_Marwan051_final_project_backend_internal_service_routing.Filters": {
             "type": "object",
             "properties": {
-                "main_streets": {"$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.FilterBlock"},
-                "modes": {"$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.FilterBlock"}
+                "main_streets": {
+                    "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.FilterBlock"
+                },
+                "modes": {
+                    "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.FilterBlock"
+                }
             }
         },
         "github_com_Marwan051_final_project_backend_internal_service_routing.Journey": {
             "type": "object",
             "properties": {
-                "id": {"type": "integer"},
-                "labels": {"type": "array", "items": {"type": "string"}},
-                "labels_ar": {"type": "array", "items": {"type": "string"}},
-                "legs": {"type": "array", "items": {"$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.Leg"}},
-                "recommended_for": {"type": "string"},
-                "summary": {"$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.JourneySummary"},
-                "text_summary": {"type": "string"},
-                "text_summary_en": {"type": "string"}
+                "id": {
+                    "type": "integer"
+                },
+                "labels": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "labels_ar": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "legs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.Leg"
+                    }
+                },
+                "recommended_for": {
+                    "type": "string"
+                },
+                "summary": {
+                    "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.JourneySummary"
+                },
+                "text_summary": {
+                    "type": "string"
+                },
+                "text_summary_en": {
+                    "type": "string"
+                }
             }
         },
         "github_com_Marwan051_final_project_backend_internal_service_routing.JourneySummary": {
             "type": "object",
             "properties": {
-                "cost": {"type": "number"},
-                "main_streets_ar": {"type": "array", "items": {"type": "string"}},
-                "main_streets_en": {"type": "array", "items": {"type": "string"}},
-                "modes_ar": {"type": "array", "items": {"type": "string"}},
-                "modes_en": {"type": "array", "items": {"type": "string"}},
-                "total_distance_meters": {"type": "integer"},
-                "total_time_minutes": {"type": "integer"},
-                "transfers": {"type": "integer"},
-                "transit_distance_meters": {"type": "integer"},
-                "walking_distance_meters": {"type": "integer"}
+                "cost": {
+                    "type": "number"
+                },
+                "main_streets_ar": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "main_streets_en": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "modes_ar": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "modes_en": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "total_distance_meters": {
+                    "type": "integer"
+                },
+                "total_time_minutes": {
+                    "type": "integer"
+                },
+                "transfers": {
+                    "type": "integer"
+                },
+                "transit_distance_meters": {
+                    "type": "integer"
+                },
+                "walking_distance_meters": {
+                    "type": "integer"
+                }
             }
         },
         "github_com_Marwan051_final_project_backend_internal_service_routing.Leg": {
             "type": "object",
             "properties": {
-                "distance_meters": {"type": "integer"},
-                "duration_minutes": {"type": "integer"},
-                "end_stop_id": {"type": "string"},
-                "fare": {"type": "number"},
-                "from_stop": {"$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.StopInfo"},
-                "from_trip_id": {"type": "string"},
-                "from_trip_name": {"type": "string"},
-                "from_trip_name_ar": {"type": "string"},
-                "headsign": {"type": "string"},
-                "headsign_ar": {"type": "string"},
-                "mode_ar": {"type": "string"},
-                "mode_en": {"type": "string"},
-                "polyline": {"type": "string"},
-                "route_short_name": {"type": "string"},
-                "route_short_name_ar": {"type": "string"},
-                "to_stop": {"$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.StopInfo"},
-                "to_trip_id": {"type": "string"},
-                "to_trip_name": {"type": "string"},
-                "to_trip_name_ar": {"type": "string"},
-                "trip_id": {"type": "string"},
-                "trip_ids": {"type": "array", "items": {"type": "string"}},
-                "type": {"type": "string"},
-                "walking_distance_meters": {"type": "integer"}
+                "distance_meters": {
+                    "type": "integer"
+                },
+                "duration_minutes": {
+                    "type": "integer"
+                },
+                "end_stop_id": {
+                    "type": "string"
+                },
+                "fare": {
+                    "type": "number"
+                },
+                "from_stop": {
+                    "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.StopInfo"
+                },
+                "from_trip_id": {
+                    "type": "string"
+                },
+                "from_trip_name": {
+                    "type": "string"
+                },
+                "from_trip_name_ar": {
+                    "type": "string"
+                },
+                "headsign": {
+                    "type": "string"
+                },
+                "headsign_ar": {
+                    "type": "string"
+                },
+                "mode_ar": {
+                    "type": "string"
+                },
+                "mode_en": {
+                    "type": "string"
+                },
+                "polyline": {
+                    "type": "string"
+                },
+                "route_short_name": {
+                    "type": "string"
+                },
+                "route_short_name_ar": {
+                    "type": "string"
+                },
+                "to_stop": {
+                    "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.StopInfo"
+                },
+                "to_trip_id": {
+                    "type": "string"
+                },
+                "to_trip_name": {
+                    "type": "string"
+                },
+                "to_trip_name_ar": {
+                    "type": "string"
+                },
+                "trip_id": {
+                    "type": "string"
+                },
+                "trip_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "type": {
+                    "type": "string"
+                },
+                "walking_distance_meters": {
+                    "type": "integer"
+                }
             }
         },
         "github_com_Marwan051_final_project_backend_internal_service_routing.RouteRequest": {
             "type": "object",
             "properties": {
-                "end_lat": {"type": "number"},
-                "end_lon": {"type": "number"},
-                "filters": {"$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.Filters"},
-                "max_transfers": {"type": "integer"},
-                "priority": {"type": "string"},
-                "start_lat": {"type": "number"},
-                "start_lon": {"type": "number"},
-                "top_k": {"type": "integer"},
-                "walking_cutoff": {"type": "integer"},
-                "weights": {"type": "object", "additionalProperties": {"type": "number", "format": "float64"}}
+                "end_lat": {
+                    "type": "number"
+                },
+                "end_lon": {
+                    "type": "number"
+                },
+                "filters": {
+                    "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.Filters"
+                },
+                "max_transfers": {
+                    "type": "integer"
+                },
+                "priority": {
+                    "type": "string"
+                },
+                "start_lat": {
+                    "type": "number"
+                },
+                "start_lon": {
+                    "type": "number"
+                },
+                "top_k": {
+                    "type": "integer"
+                },
+                "walking_cutoff": {
+                    "type": "integer"
+                },
+                "weights": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "number",
+                        "format": "float64"
+                    }
+                }
             }
         },
         "github_com_Marwan051_final_project_backend_internal_service_routing.RouteResponse": {
             "type": "object",
             "properties": {
-                "end_trips_found": {"type": "integer"},
-                "error": {"type": "string"},
-                "geometry_encoding": {"type": "string"},
-                "journeys": {"type": "array", "items": {"$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.Journey"}},
-                "num_journeys": {"type": "integer"},
-                "selected_priority": {"type": "string"},
-                "start_trips_found": {"type": "integer"},
-                "total_after_dedup": {"type": "integer"},
-                "total_routes_found": {"type": "integer"},
-                "weights_used": {"type": "object", "additionalProperties": {"type": "number", "format": "float64"}}
+                "end_trips_found": {
+                    "type": "integer"
+                },
+                "error": {
+                    "type": "string"
+                },
+                "geometry_encoding": {
+                    "type": "string"
+                },
+                "journeys": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.Journey"
+                    }
+                },
+                "num_journeys": {
+                    "type": "integer"
+                },
+                "selected_priority": {
+                    "type": "string"
+                },
+                "start_trips_found": {
+                    "type": "integer"
+                },
+                "total_after_dedup": {
+                    "type": "integer"
+                },
+                "total_routes_found": {
+                    "type": "integer"
+                },
+                "weights_used": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "number",
+                        "format": "float64"
+                    }
+                }
             }
         },
         "github_com_Marwan051_final_project_backend_internal_service_routing.StopInfo": {
             "type": "object",
             "properties": {
-                "coord": {"type": "array", "items": {"type": "number"}},
-                "name": {"type": "string"},
-                "name_ar": {"type": "string"},
-                "stop_id": {"type": "string"}
+                "coord": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "name_ar": {
+                    "type": "string"
+                },
+                "stop_id": {
+                    "type": "string"
+                }
             }
         },
         "github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.StatusResponse": {
             "type": "object",
             "properties": {
-                "is_running": {"type": "boolean"},
-                "last_update": {"type": "string"},
-                "status": {"type": "string"},
-                "trips_in_data": {"type": "integer"}
+                "is_running": {
+                    "type": "boolean"
+                },
+                "last_update": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "trips_in_data": {
+                    "type": "integer"
+                }
             }
         },
         "github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.StreetInfo": {
             "type": "object",
             "properties": {
-                "aliases": {"type": "array", "items": {"type": "string"}},
-                "name": {"type": "string"},
-                "name_ar": {"type": "string"},
-                "segments": {"type": "integer"},
-                "total_length_km": {"type": "number"}
+                "aliases": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "name_ar": {
+                    "type": "string"
+                },
+                "segments": {
+                    "type": "integer"
+                },
+                "total_length_km": {
+                    "type": "number"
+                }
             }
         },
         "github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.StreetListResponse": {
             "type": "object",
             "properties": {
-                "count": {"type": "integer"},
-                "streets": {"type": "array", "items": {"$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.StreetInfo"}}
+                "count": {
+                    "type": "integer"
+                },
+                "streets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.StreetInfo"
+                    }
+                }
             }
         },
         "github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.StreetTrafficLeg": {
             "type": "object",
             "properties": {
-                "distance_m": {"type": "integer"},
-                "distance_text": {"type": "string"},
-                "duration_seconds": {"type": "integer"},
-                "duration_text": {"type": "string"}
+                "distance_m": {
+                    "type": "integer"
+                },
+                "distance_text": {
+                    "type": "string"
+                },
+                "duration_seconds": {
+                    "type": "integer"
+                },
+                "duration_text": {
+                    "type": "string"
+                }
             }
         },
         "github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.StreetTrafficRequest": {
             "type": "object",
             "properties": {
-                "language": {"type": "string"},
-                "max_waypoints": {"type": "integer"},
-                "name": {"type": "string"}
+                "language": {
+                    "type": "string"
+                },
+                "max_waypoints": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
             }
         },
         "github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.StreetTrafficResponse": {
             "type": "object",
             "properties": {
-                "error": {"type": "string"},
-                "legs": {"type": "array", "items": {"$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.StreetTrafficLeg"}},
-                "routes": {"type": "array", "items": {"$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.StreetTrafficRoute"}},
-                "segments": {"type": "integer"},
-                "street": {"type": "string"},
-                "street_ar": {"type": "string"},
-                "total_distance_km": {"type": "number"},
-                "total_duration_min": {"type": "number"},
-                "waypoints_used": {"type": "integer"}
+                "error": {
+                    "type": "string"
+                },
+                "legs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.StreetTrafficLeg"
+                    }
+                },
+                "routes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.StreetTrafficRoute"
+                    }
+                },
+                "segments": {
+                    "type": "integer"
+                },
+                "street": {
+                    "type": "string"
+                },
+                "street_ar": {
+                    "type": "string"
+                },
+                "total_distance_km": {
+                    "type": "number"
+                },
+                "total_duration_min": {
+                    "type": "number"
+                },
+                "waypoints_used": {
+                    "type": "integer"
+                }
             }
         },
         "github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.StreetTrafficRoute": {
             "type": "object",
             "properties": {
-                "distance_m": {"type": "integer"},
-                "distance_text": {"type": "string"},
-                "duration_seconds": {"type": "integer"},
-                "duration_text": {"type": "string"},
-                "label": {"type": "string"}
+                "distance_m": {
+                    "type": "integer"
+                },
+                "distance_text": {
+                    "type": "string"
+                },
+                "duration_seconds": {
+                    "type": "integer"
+                },
+                "duration_text": {
+                    "type": "string"
+                },
+                "label": {
+                    "type": "string"
+                }
             }
         },
         "github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.TriggerRequest": {
             "type": "object",
             "properties": {
-                "notify_routing_api": {"type": "boolean"},
-                "trip_ids": {"description": "empty = all trips", "type": "array", "items": {"type": "string"}}
+                "notify_routing_api": {
+                    "type": "boolean"
+                },
+                "trip_ids": {
+                    "description": "empty = all trips",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
             }
         },
         "github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.UpdateResponse": {
             "type": "object",
             "properties": {
-                "message": {"type": "string"},
-                "status": {"type": "string"},
-                "trips_failed": {"type": "integer"},
-                "trips_updated": {"type": "integer"}
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "trips_failed": {
+                    "type": "integer"
+                },
+                "trips_updated": {
+                    "type": "integer"
+                }
             }
         },
         "github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.UpdateTripRequest": {
             "type": "object",
             "properties": {
-                "notify_routing_api": {"type": "boolean"},
-                "trip_id": {"type": "string"}
+                "notify_routing_api": {
+                    "type": "boolean"
+                },
+                "trip_id": {
+                    "type": "string"
+                }
             }
         },
         "internal_api_v1.HealthResponse": {
             "type": "object",
             "properties": {
-                "status": {"type": "string"},
-                "timestamp": {"type": "string"}
+                "status": {
+                    "type": "string"
+                },
+                "timestamp": {
+                    "type": "string"
+                }
             }
         }
     },
     "securityDefinitions": {
         "ApiKeyAuth": {
-            "description": "Paste your Supabase JWT access_token here (with 'Bearer ' prefix). Get it by signing in with Google via Supabase, then copy the access_token from the session.",
+            "description": "Paste your Supabase access token here. Swagger UI will send it as a Bearer token.",
             "type": "apiKey",
             "name": "Authorization",
             "in": "header"
-        },
-        "SupabaseOAuth": {
-            "description": "Sign in with Google via Supabase OAuth. Click Authorize below, then 'Login with Google'. NOTE: you must first add your Swagger UI URL (e.g. http://localhost:8080/swagger/oauth2-redirect.html) to Allowed Redirect URLs in your Supabase project under Authentication > URL Configuration.",
-            "type": "oauth2",
-            "flow": "accessCode",
-            "authorizationUrl": "https://uhsvskfingvwqfpbxldf.supabase.co/auth/v1/authorize?provider=google",
-            "tokenUrl": "https://uhsvskfingvwqfpbxldf.supabase.co/auth/v1/token?grant_type=authorization_code",
-            "scopes": {
-                "openid": "OpenID Connect",
-                "email": "Access to user email"
-            }
         }
     }
 }`
