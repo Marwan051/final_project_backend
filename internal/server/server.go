@@ -36,10 +36,20 @@ func NewHandler(
 	// Unauthenticated routes
 	mux.HandleFunc("GET /health", v1.HealthHandler)
 
-	// Swagger UI endpoint (unauthenticated, dev only)
-	if utils.Cfg.ENV == "dev" {
+	// Swagger UI endpoint (unauthenticated).
+	// Enabled when running in dev *or* when `ENABLE_SWAGGER=true` is set.
+	if utils.Cfg.ENV == "dev" || utils.Cfg.EnableSwagger {
 		mux.Handle("/docs/", httpSwagger.Handler(
 			httpSwagger.URL("/docs/doc.json"), //The url pointing to API definition
+			httpSwagger.UIConfig(map[string]string{
+				"persistAuthorization": "true",
+				"requestInterceptor": `function(req) {
+  if (req.headers && req.headers.Authorization && !req.headers.Authorization.startsWith('Bearer ')) {
+    req.headers.Authorization = 'Bearer ' + req.headers.Authorization;
+  }
+  return req;
+}`,
+			}),
 		))
 	}
 

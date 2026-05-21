@@ -1267,5 +1267,13 @@
                 }
             }
         }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "description": "Paste your Supabase access token here. Swagger UI will send it as a Bearer token.",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
     }
 }

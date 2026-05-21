@@ -9,7 +9,6 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/Marwan051/final_project_backend/docs"
 	"github.com/Marwan051/final_project_backend/internal/auth"
 	"github.com/Marwan051/final_project_backend/internal/server"
 	agent_client "github.com/Marwan051/final_project_backend/internal/service/agent/client"
@@ -25,13 +24,16 @@ import (
 // @description     This is the API server for the Routing App Backend.
 // @host
 // @BasePath        /
+// @securityDefinitions.apikey ApiKeyAuth
+// @in              header
+// @name            Authorization
+// @description     Paste your Supabase access token here. Swagger UI will send it as a Bearer token.
 func main() {
 	// Load configuration
 	if err := utils.LoadENV(); err != nil {
 		log.Fatalf("failed to load config: %v", err)
 	}
 	cfg := utils.Cfg
-	docs.SwaggerInfo.Host = "localhost:" + cfg.Port
 
 	// load routing service
 	routingService, err := routing_client.NewRoutingClient(routing_client.ClientConfig{

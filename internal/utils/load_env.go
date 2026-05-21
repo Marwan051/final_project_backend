@@ -9,18 +9,21 @@ import (
 )
 
 type Config struct {
-	Port                   string        `env:"PORT,required"`
-	ENV                    string        `env:"ENV,required"`
-	GRPCRequestTimeout     time.Duration `env:"GRPC_REQUEST_TIMEOUT" envDefault:"10s"`
-	RoutingServiceAddr     string        `env:"ROUTING_SERVICE_ADDR,required"`
-	AgentServiceAddr       string        `env:"AGENT_SERVICE_ADDR,required"`
-	DbToolsAddr            string        `env:"DB_TOOLS_ADDR,required"`
-	GeocodingAddr          string        `env:"GEOCODING_ADDR,required"`
-	TrafficUpdaterAddr     string        `env:"TRAFFIC_UPDATER_ADDR,required"`
-	DisableAuth            bool          `env:"DISABLE_AUTH" envDefault:"false"`
-	SupabaseURL            string        `env:"SUPABASE_URL,required"`
-	SupabaseSecretKey      string        `env:"SUPABASE_SECRET_KEY"`
-	SupabaseServiceRoleKey string        `env:"SUPABASE_SERVICE_ROLE_KEY"`
+	Port               string        `env:"PORT,required"`
+	ENV                string        `env:"ENV,required"`
+	GRPCRequestTimeout time.Duration `env:"GRPC_REQUEST_TIMEOUT" envDefault:"10s"`
+	RoutingServiceAddr string        `env:"ROUTING_SERVICE_ADDR,required"`
+	AgentServiceAddr   string        `env:"AGENT_SERVICE_ADDR,required"`
+	DbToolsAddr        string        `env:"DB_TOOLS_ADDR,required"`
+	GeocodingAddr      string        `env:"GEOCODING_ADDR,required"`
+	TrafficUpdaterAddr string        `env:"TRAFFIC_UPDATER_ADDR,required"`
+	DisableAuth        bool          `env:"DISABLE_AUTH" envDefault:"false"`
+	// EnableSwagger allows serving the Swagger UI even when ENV != "dev".
+	// Set via environment variable `ENABLE_SWAGGER=true` to enable.
+	EnableSwagger          bool   `env:"ENABLE_SWAGGER" envDefault:"false"`
+	SupabaseURL            string `env:"SUPABASE_URL,required"`
+	SupabaseSecretKey      string `env:"SUPABASE_SECRET_KEY"`
+	SupabaseServiceRoleKey string `env:"SUPABASE_SERVICE_ROLE_KEY"`
 }
 
 // Cfg will hold your application’s config after Load()

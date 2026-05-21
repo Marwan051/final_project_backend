@@ -651,7 +651,9 @@ To verify admin access, check your Supabase user's custom claims or `app_metadat
 
 ## Swagger / OpenAPI Documentation
 
-In development (`ENV=dev`) the server serves a Swagger UI at `/docs/`:
+The server serves a Swagger UI at `/docs/` when enabled. By default this is active
+when `ENV=dev`, but you can also enable it in other environments with the
+`ENABLE_SWAGGER=true` environment variable.
 
 ```bash
 curl http://localhost:3000/docs/

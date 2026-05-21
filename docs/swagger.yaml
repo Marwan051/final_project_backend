@@ -78,7 +78,7 @@ definitions:
         type: boolean
       trips:
         items:
-          $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_db_tools_proto.NearbyTripResult'
+          $ref: "#/definitions/github_com_Marwan051_final_project_backend_internal_service_db_tools_proto.NearbyTripResult"
         type: array
     type: object
   github_com_Marwan051_final_project_backend_internal_service_geocoding_proto.GeocodeRequest:
@@ -109,7 +109,7 @@ definitions:
         type: string
       results:
         items:
-          $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_geocoding_proto.GeocodeResult'
+          $ref: "#/definitions/github_com_Marwan051_final_project_backend_internal_service_geocoding_proto.GeocodeResult"
         type: array
       success:
         type: boolean
@@ -148,9 +148,9 @@ definitions:
   github_com_Marwan051_final_project_backend_internal_service_routing.Filters:
     properties:
       main_streets:
-        $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.FilterBlock'
+        $ref: "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.FilterBlock"
       modes:
-        $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.FilterBlock'
+        $ref: "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.FilterBlock"
     type: object
   github_com_Marwan051_final_project_backend_internal_service_routing.Journey:
     properties:
@@ -166,12 +166,12 @@ definitions:
         type: array
       legs:
         items:
-          $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.Leg'
+          $ref: "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.Leg"
         type: array
       recommended_for:
         type: string
       summary:
-        $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.JourneySummary'
+        $ref: "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.JourneySummary"
       text_summary:
         type: string
       text_summary_en:
@@ -219,7 +219,7 @@ definitions:
       fare:
         type: number
       from_stop:
-        $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.StopInfo'
+        $ref: "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.StopInfo"
       from_trip_id:
         type: string
       from_trip_name:
@@ -241,7 +241,7 @@ definitions:
       route_short_name_ar:
         type: string
       to_stop:
-        $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.StopInfo'
+        $ref: "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.StopInfo"
       to_trip_id:
         type: string
       to_trip_name:
@@ -266,7 +266,7 @@ definitions:
       end_lon:
         type: number
       filters:
-        $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.Filters'
+        $ref: "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.Filters"
       max_transfers:
         type: integer
       priority:
@@ -295,7 +295,7 @@ definitions:
         type: string
       journeys:
         items:
-          $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.Journey'
+          $ref: "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.Journey"
         type: array
       num_journeys:
         type: integer
@@ -358,7 +358,7 @@ definitions:
         type: integer
       streets:
         items:
-          $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.StreetInfo'
+          $ref: "#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.StreetInfo"
         type: array
     type: object
   github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.StreetTrafficLeg:
@@ -387,11 +387,11 @@ definitions:
         type: string
       legs:
         items:
-          $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.StreetTrafficLeg'
+          $ref: "#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.StreetTrafficLeg"
         type: array
       routes:
         items:
-          $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.StreetTrafficRoute'
+          $ref: "#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.StreetTrafficRoute"
         type: array
       segments:
         type: integer
@@ -463,23 +463,24 @@ paths:
   /api/v1/agent/query:
     post:
       consumes:
-      - application/json
-      description: Sends a message to the agent and returns the reply plus session
+        - application/json
+      description:
+        Sends a message to the agent and returns the reply plus session
         id
       parameters:
-      - description: Agent Query Request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_agent.AgentRequest'
+        - description: Agent Query Request
+          in: body
+          name: request
+          required: true
+          schema:
+            $ref: "#/definitions/github_com_Marwan051_final_project_backend_internal_service_agent.AgentRequest"
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_agent.AgentResponse'
+            $ref: "#/definitions/github_com_Marwan051_final_project_backend_internal_service_agent.AgentResponse"
         "400":
           description: Bad Request
           schema:
@@ -493,29 +494,29 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+        - ApiKeyAuth: []
       summary: Agent Query
       tags:
-      - agent
+        - agent
   /api/v1/geocode:
     post:
       consumes:
-      - application/json
+        - application/json
       description: Converts a text address into latitude and longitude coordinates
       parameters:
-      - description: Geocode Request (Address)
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_geocoding_proto.GeocodeRequest'
+        - description: Geocode Request (Address)
+          in: body
+          name: request
+          required: true
+          schema:
+            $ref: "#/definitions/github_com_Marwan051_final_project_backend_internal_service_geocoding_proto.GeocodeRequest"
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_geocoding_proto.GeocodeResponse'
+            $ref: "#/definitions/github_com_Marwan051_final_project_backend_internal_service_geocoding_proto.GeocodeResponse"
         "400":
           description: Bad Request
           schema:
@@ -529,29 +530,29 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+        - ApiKeyAuth: []
       summary: Geocode Address
       tags:
-      - geocoding
+        - geocoding
   /api/v1/nearby-trips:
     post:
       consumes:
-      - application/json
+        - application/json
       description: Finds trips near a given location within a specified radius
       parameters:
-      - description: Nearby Trips Request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_db_tools_proto.NearbyTripsRequest'
+        - description: Nearby Trips Request
+          in: body
+          name: request
+          required: true
+          schema:
+            $ref: "#/definitions/github_com_Marwan051_final_project_backend_internal_service_db_tools_proto.NearbyTripsRequest"
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_db_tools_proto.NearbyTripsResponse'
+            $ref: "#/definitions/github_com_Marwan051_final_project_backend_internal_service_db_tools_proto.NearbyTripsResponse"
         "400":
           description: Bad Request
           schema:
@@ -565,29 +566,29 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+        - ApiKeyAuth: []
       summary: Get Nearby Trips
       tags:
-      - db_tools
+        - db_tools
   /api/v1/route:
     post:
       consumes:
-      - application/json
+        - application/json
       description: Calculates the best route from start coordinates to end coordinates
       parameters:
-      - description: Route Request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.RouteRequest'
+        - description: Route Request
+          in: body
+          name: request
+          required: true
+          schema:
+            $ref: "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.RouteRequest"
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.RouteResponse'
+            $ref: "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.RouteResponse"
         "400":
           description: Bad Request
           schema:
@@ -601,22 +602,22 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+        - ApiKeyAuth: []
       summary: Find Route
       tags:
-      - routing
+        - routing
   /api/v1/routing/rebuild-network:
     post:
       consumes:
-      - application/json
+        - application/json
       description: Admin only. Rebuilds the routing network from source data.
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.AdminOperationResponse'
+            $ref: "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.AdminOperationResponse"
         "500":
           description: Internal Server Error
           schema:
@@ -624,22 +625,22 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+        - ApiKeyAuth: []
       summary: Rebuild Routing Network
       tags:
-      - routing
+        - routing
   /api/v1/routing/reload-prefix-times:
     post:
       consumes:
-      - application/json
+        - application/json
       description: Admin only. Reloads prefix times for the routing graph.
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.AdminOperationResponse'
+            $ref: "#/definitions/github_com_Marwan051_final_project_backend_internal_service_routing.AdminOperationResponse"
         "500":
           description: Internal Server Error
           schema:
@@ -647,20 +648,20 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+        - ApiKeyAuth: []
       summary: Reload Prefix Times
       tags:
-      - routing
+        - routing
   /api/v1/traffic/status:
     get:
       description: Retrieves the current traffic update status
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.StatusResponse'
+            $ref: "#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.StatusResponse"
         "500":
           description: Internal Server Error
           schema:
@@ -668,29 +669,29 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+        - ApiKeyAuth: []
       summary: Get Traffic Status
       tags:
-      - traffic
+        - traffic
   /api/v1/traffic/street:
     post:
       consumes:
-      - application/json
+        - application/json
       description: Fetches the current calculated traffic load on a specific street
       parameters:
-      - description: Get Street Traffic Request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.StreetTrafficRequest'
+        - description: Get Street Traffic Request
+          in: body
+          name: request
+          required: true
+          schema:
+            $ref: "#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.StreetTrafficRequest"
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.StreetTrafficResponse'
+            $ref: "#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.StreetTrafficResponse"
         "400":
           description: Bad Request
           schema:
@@ -704,21 +705,22 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+        - ApiKeyAuth: []
       summary: Get Street Traffic
       tags:
-      - traffic
+        - traffic
   /api/v1/traffic/streets:
     get:
-      description: Returns a list of all streets actively tracked and their traffic
+      description:
+        Returns a list of all streets actively tracked and their traffic
         levels
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.StreetListResponse'
+            $ref: "#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.StreetListResponse"
         "500":
           description: Internal Server Error
           schema:
@@ -726,29 +728,29 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+        - ApiKeyAuth: []
       summary: List All Streets Traffic
       tags:
-      - traffic
+        - traffic
   /api/v1/traffic/trigger:
     post:
       consumes:
-      - application/json
+        - application/json
       description: Triggers a background traffic update process
       parameters:
-      - description: Trigger Request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.TriggerRequest'
+        - description: Trigger Request
+          in: body
+          name: request
+          required: true
+          schema:
+            $ref: "#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.TriggerRequest"
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.UpdateResponse'
+            $ref: "#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.UpdateResponse"
         "400":
           description: Bad Request
           schema:
@@ -762,29 +764,29 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+        - ApiKeyAuth: []
       summary: Trigger Traffic Update
       tags:
-      - traffic
+        - traffic
   /api/v1/traffic/update-trip:
     post:
       consumes:
-      - application/json
+        - application/json
       description: Submits trip information to affect current traffic modelling
       parameters:
-      - description: Update Trip Request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.UpdateTripRequest'
+        - description: Update Trip Request
+          in: body
+          name: request
+          required: true
+          schema:
+            $ref: "#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.UpdateTripRequest"
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.UpdateResponse'
+            $ref: "#/definitions/github_com_Marwan051_final_project_backend_internal_service_traffic_updater_proto.UpdateResponse"
         "400":
           description: Bad Request
           schema:
@@ -798,23 +800,31 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+        - ApiKeyAuth: []
       summary: Update Trip Traffic
       tags:
-      - traffic
+        - traffic
   /health:
     get:
       consumes:
-      - application/json
+        - application/json
       description: Returns the health status of the backend service
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/internal_api_v1.HealthResponse'
+            $ref: "#/definitions/internal_api_v1.HealthResponse"
       summary: Health Check
       tags:
-      - system
+        - system
+securityDefinitions:
+  ApiKeyAuth:
+    description:
+      Paste your Supabase access token here. Swagger UI will send it as
+      a Bearer token.
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"
